@@ -1,0 +1,51 @@
+<div class="header">
+
+    <img src="./assets/img/ts-logo.svg" class="logo">
+
+    <nav class="navbar navbar-expand navbar-light bg-light" tsMonkeyPatchSticky>
+        <a class="navbar-brand">TsMonkeypatch</a>
+
+        <ul class="navbar-nav w-100">
+            <li class="nav-item flex-grow-0 flex-shrink-1">
+                <!-- simple overlay -->
+                <button type="button" class="btn btn-primary nav-item" [tsMonkeyPatchOverlay]="overlay" [tsMonkeyPatchOverlayTrigger]="'click'">Show Overlay</button>
+            </li>
+            <li class="nav-item form-inline flex-grow-1 mx-3">
+                <label class="input-group nav-item w-100">
+                    <span class="input-group-prepend mr-1">
+                        search:
+                    </span>
+                    <input type="text" class="form-control" [tsMonkeyPatchOverlay]="textfieldOverlay" [tsMonkeyPatchOverlayTrigger]="'focus'" [widthStrategy]="'host'">
+                </label>
+            </li>
+            <li class="nav-item flex-grow-0 flex-shrink-1">
+                <button class="btn btn-primary nav-item" [tsMonkeyPatchOverlay]="tooltip" [tsMonkeyPatchOverlayTrigger]="'hover'" (click)="scrollToPageEnd()">Scroll down</button>
+            </li>
+            <li class="nav-item"></li>
+        </ul>
+    </nav>
+</div>
+
+<div class="container main">
+    <!-- content goes here -->
+    <router-outlet></router-outlet>
+</div>
+
+<div class="footer">
+    footer
+</div>
+
+<!-- overlay container so this will not affect my view -->
+<tsmp-overlay #overlay>
+    <span>a very basic overlay bound to my button</span>
+</tsmp-overlay>
+
+<tsmp-overlay #tooltip>
+    <span>Click to scroll 2000px down</span>
+</tsmp-overlay>
+
+<tsmp-overlay #textfieldOverlay>
+    <div style="background-color: white; padding: 2rem; border: 1px solid; border-width: 0 1px 1px;" class="w-100">
+        here is my auto complete, combobox or whatever i want
+    </div>
+</tsmp-overlay>

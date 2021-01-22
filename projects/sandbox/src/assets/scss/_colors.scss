@@ -1,0 +1,16 @@
+@use "sass:map";
+
+$colors: (
+    logo: (
+        blue: #3178C6,
+        light-blue: #358EF1,
+        dark-blue: #235A97,
+        dark: #00273F,
+        bg-primary: #FAF9F8
+    )
+);
+
+@function getColor($namespace: "logo", $color) {
+    $colorMap: map.get($colors, $namespace);
+    @return map.get($colorMap, $color);
+}
