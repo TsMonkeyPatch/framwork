@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TsMonkeyPatchStickyDirective } from './directives/sticky-directive';
-import { TsMonkeyPatchFocusable, TsMonkeyPatchNavigableList } from './directives/navigable-list';
+import { TsMonkeyPatchNavigableListItem, TsMonkeyPatchNavigableList } from './directives/navigable-list';
 
 @NgModule({
     declarations: [
         TsMonkeyPatchStickyDirective,
         TsMonkeyPatchNavigableList,
-        TsMonkeyPatchFocusable
+        TsMonkeyPatchNavigableListItem
     ],
     imports: [
         CommonModule
@@ -15,9 +15,8 @@ import { TsMonkeyPatchFocusable, TsMonkeyPatchNavigableList } from './directives
     exports: [
         TsMonkeyPatchStickyDirective,
         TsMonkeyPatchNavigableList,
-        TsMonkeyPatchFocusable
-    ],
-    providers: [],
+        TsMonkeyPatchNavigableListItem
+    ]
 })
 export class TsMonkeyPatchCommonModule {
 }

@@ -2,32 +2,41 @@ import { AfterViewInit, ContentChildren, Directive, ElementRef, EventEmitter, Ho
 import { FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
 
 /**
- * focusable item
+ * Directive for a focusable item
  * 
  */
 @Directive({
-    selector: '[tsmpFocusable]',
+    selector: '[tsmpNavigableListItem]',
     host: {
         tabIndex: "-1"
     }
 })
-export class TsMonkeyPatchFocusable implements FocusableOption {
+export class TsMonkeyPatchNavigableListItem implements FocusableOption {
 
+    /**
+     * output event to get notified we focused the current element
+     *
+     */
     @Output()
-    tsmpFocusable: EventEmitter<void> = new EventEmitter();
+    onFocus: EventEmitter<void> = new EventEmitter();
 
     constructor(
         private el: ElementRef<HTMLElement>
     ) {}
 
+    /**
+     * element gets the focus, programatically focus the html input element
+     * and notify the observers
+     *
+     */
     focus(): void {
         this.el.nativeElement.focus();
-        this.tsmpFocusable.emit();
+        this.onFocus.emit();
     }
 }
 
 /**
- * focusable list directive
+ * Directive for a focusable list
  *
  */
 @Directive({
@@ -36,33 +45,34 @@ export class TsMonkeyPatchFocusable implements FocusableOption {
 export class  TsMonkeyPatchNavigableList implements AfterViewInit {
 
     /**
-     * das ist spannend das geht wirklich ...
+     * all content children which are focusable
      *
      */
-    @ContentChildren(TsMonkeyPatchFocusable, {read: TsMonkeyPatchFocusable})
-    public items: QueryList<TsMonkeyPatchFocusable>;
+    @ContentChildren(TsMonkeyPatchNavigableListItem, {read: TsMonkeyPatchNavigableListItem})
+    private items: QueryList<TsMonkeyPatchNavigableListItem>;
 
     /**
-     * angular cdk keymanager to control keyboard navigation 
+     * focus keymanager from angular cdk which helps us to delegate through html elements
+     * with the keyboard
      *
      */
-    private keyManager: FocusKeyManager<TsMonkeyPatchFocusable>;
+    private focusKeyManager: FocusKeyManager<TsMonkeyPatchNavigableListItem>;
 
     /**
      * construct focus key manager instance and pass focusable items
      *
      */
     ngAfterViewInit() {
-        this.keyManager = new FocusKeyManager(this.items)
+        this.focusKeyManager = new FocusKeyManager(this.items)
             .withWrap();
     }
 
     /**
-     * catch and bypass keydown event to keymanager
+     * handle the keydown event and pass directly to focus keymanager
      *
      */
     @HostListener('keydown', ['$event'])
-    keyDown($event: KeyboardEvent) {
-        this.keyManager.onKeydown($event);
+    onKeydown($event: KeyboardEvent) {
+        this.focusKeyManager.onKeydown($event);
     }
 }
