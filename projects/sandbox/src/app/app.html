@@ -27,9 +27,12 @@
 </div>
 
 <div class="container main">
-
-    <tsmp-forms-checkbox-group [options]="options" [multi]="true" (valueChange)="onValueChanges($event)">
-    </tsmp-forms-checkbox-group>
+    <!-- navigable list -->
+    <ul tsmpNavigableList>
+        <li *ngFor="let item of [1, 2, 3, 4]" tsmpNavigableListItem>
+            element: {{item}}
+        </li>
+    </ul>
 </div>
 
 <div class="footer">
