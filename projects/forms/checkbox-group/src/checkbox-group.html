@@ -1,0 +1,8 @@
+<ul>
+    <li *ngFor="let option of items" tabindex="-1">
+        <label>
+            {{option.data.label}}
+            <input type="checkbox" [formControl]="option.control">
+        </label>
+    </li>
+</ul>
