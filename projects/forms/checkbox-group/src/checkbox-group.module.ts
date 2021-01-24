@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CheckboxGroup } from './checkbox-group';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TsMonkeyPatchCommonModule } from '@tsmonkeypatch/core/common';
 
 @NgModule({
     declarations: [
@@ -9,7 +10,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     ],
     imports: [
        CommonModule,
-       ReactiveFormsModule
+       ReactiveFormsModule,
+       TsMonkeyPatchCommonModule
     ],
     exports: [
         CheckboxGroup,

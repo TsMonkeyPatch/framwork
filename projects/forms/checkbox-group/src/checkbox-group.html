@@ -1,5 +1,5 @@
-<ul>
-    <li *ngFor="let option of items" tabindex="-1">
+<ul tsmpNavigableList>
+    <li *ngFor="let option of items" (tsmpFocusable)="handleFocus(option)" >
         <label>
             {{option.data.label}}
             <input type="checkbox" [formControl]="option.control">

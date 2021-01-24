@@ -1,5 +1,5 @@
 import { FormBuilder, FormControl } from "@angular/forms";
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { merge, Subscription } from "rxjs";
 import { map } from "rxjs/operators";
 import { Option } from "./api";
@@ -17,7 +17,7 @@ interface OptionItem {
 export class CheckboxGroup implements OnInit, OnDestroy {
 
     @Output()
-    valueChange: EventEmitter<any> = new EventEmitter();
+    valueChange: EventEmitter<Option[]> = new EventEmitter();
 
     /**
      * if true multi select is enabled, default = true
@@ -33,10 +33,16 @@ export class CheckboxGroup implements OnInit, OnDestroy {
     public items: OptionItem[] = [];
 
     /**
-     * emits true if component gets destroyed to unsubscribe
+     * subscription to merge stream of all form controls
      *
      */
     private changeSubscription: Subscription;
+
+    /**
+     * current focused option
+     * 
+     */
+    private focusedOption: OptionItem = null;
 
     /**
      * selected items
@@ -78,9 +84,27 @@ export class CheckboxGroup implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.changeSubscription.unsubscribe();
         this.changeSubscription = null;
-
         this.selected = [];
         this.options = [];
+    }
+
+    @HostListener('keydown.enter', ['$event'])
+    keyDown($event: KeyboardEvent) {
+
+        $event.stopPropagation();
+        $event.preventDefault();
+
+        if (this.focusedOption) {
+            this.focusedOption.control.setValue(!this.focusedOption.control.value);
+        }
+    }
+
+    /**
+     * we focused a item 
+     *
+     */
+    handleFocus(item: OptionItem) {
+        this.focusedOption = item;
     }
 
     /**
