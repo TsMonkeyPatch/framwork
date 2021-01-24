@@ -28,6 +28,7 @@
     "@angular/platform-browser-dynamic": "11.0.6",
     "@angular/router": "11.0.6",
     "@tsmonkeypatch/core": "file:dist/core.tar.gz",
+    "@tsmonkeypatch/form": "file:dist/forms.tar.gz",
     "@tsmonkeypatch/forms": "file:dist/forms.tar.gz",
     "bootstrap-scss": "4.5.3",
     "rxjs": "6.6.0",

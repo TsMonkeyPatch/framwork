@@ -1,16 +1,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TsMonkeyPatchStickyDirective } from './directives/sticky-directive';
+import { TsMonkeyPatchFocusable, TsMonkeyPatchNavigableList } from './directives/navigable-list';
 
 @NgModule({
     declarations: [
-        TsMonkeyPatchStickyDirective
+        TsMonkeyPatchStickyDirective,
+        TsMonkeyPatchNavigableList,
+        TsMonkeyPatchFocusable
     ],
     imports: [
         CommonModule
     ],
     exports: [
-        TsMonkeyPatchStickyDirective
+        TsMonkeyPatchStickyDirective,
+        TsMonkeyPatchNavigableList,
+        TsMonkeyPatchFocusable
     ],
     providers: [],
 })
