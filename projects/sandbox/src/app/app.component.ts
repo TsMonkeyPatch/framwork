@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { WindowScrollProvider } from '@tsmonkeypatch/ui/common';
+import { Component, OnInit } from '@angular/core';
+import { WindowScrollProvider } from '@tsmonkeypatch/core/common';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -7,13 +7,17 @@ import { take } from 'rxjs/operators';
   templateUrl: "app.html",
   styleUrls: ["./app.scss"]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
   title = 'sandbox';
+
 
   public constructor(
     private windowScrollProvider: WindowScrollProvider
   ) { }
+
+  ngOnInit() {
+  }
 
   scrollToPageEnd() {
     this.windowScrollProvider
