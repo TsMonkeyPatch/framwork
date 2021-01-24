@@ -21,7 +21,13 @@
       "dom"
     ],
     "paths": {
-      "@lib/ui/*": ["./projects/ui/*"]
+      "@lib/ui/*": [
+        "./projects/ui/*"
+      ],
+      "forms": [
+        "dist/forms/forms",
+        "dist/forms"
+      ]
     }
   },
   "angularCompilerOptions": {

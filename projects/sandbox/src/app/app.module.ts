@@ -3,20 +3,24 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TsMonkeyPatchCommonModule } from '@tsmonkeypatch/ui/common';
-import { TsMonkeyPatchOverlayModule } from '@tsmonkeypatch/ui/overlay';
+
+import { TsMonkeyPatchCommonModule } from '@tsmonkeypatch/core/common';
+import { TsMonkeyPatchOverlayModule } from '@tsmonkeypatch/core/overlay';
+import { TsMonkeyPatchCheckboxGroupModule } from 'projects/forms/checkbox-group/public-api';
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
+    AppRoutingModule,
     BrowserModule,
+    TsMonkeyPatchCheckboxGroupModule,
     TsMonkeyPatchCommonModule,
-    TsMonkeyPatchOverlayModule,
-    AppRoutingModule
+    TsMonkeyPatchOverlayModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

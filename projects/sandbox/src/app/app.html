@@ -27,8 +27,9 @@
 </div>
 
 <div class="container main">
-    <!-- content goes here -->
-    <router-outlet></router-outlet>
+
+    <tsmp-forms-checkbox-group [options]="options" [multi]="true" (valueChange)="onValueChanges($event)">
+    </tsmp-forms-checkbox-group>
 </div>
 
 <div class="footer">
