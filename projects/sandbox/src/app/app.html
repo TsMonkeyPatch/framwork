@@ -27,12 +27,7 @@
 </div>
 
 <div class="container main">
-    <!-- navigable list -->
-    <ul tsmpNavigableList>
-        <li *ngFor="let item of [1, 2, 3, 4]" tsmpNavigableListItem>
-            element: {{item}}
-        </li>
-    </ul>
+    <router-outlet></router-outlet>
 </div>
 
 <div class="footer">
