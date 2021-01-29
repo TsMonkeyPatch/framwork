@@ -24,7 +24,14 @@ export class PaginationController {
     private change$: ReplaySubject<PaginationData> = new ReplaySubject(1);
 
     /**
-     * flag data has been initialized
+     * emits current page and every time page has been changed
+     *
+     */
+    private page$: ReplaySubject<number> = new ReplaySubject(1);
+
+    /**
+     * flag data has been initialized if true our change$ is allready
+     * populated
      *
      */
     private dataInitialized = false;
@@ -46,9 +53,17 @@ export class PaginationController {
      */
     get change(): Observable<PaginationData> {
         if (!this.dataInitialized) {
-            this.change$.next(this.createPaginationData());
+            this.updatePaginationData();
         }
         return this.change$.asObservable();
+    }
+
+    /**
+     * subscribe to get notified page changed
+     *
+     */
+    get pageChange(): Observable<number> {
+        return this.page$.asObservable();
     }
 
     /**
@@ -60,8 +75,12 @@ export class PaginationController {
             return;
         }
 
+        /** update pagination data */
         this.page = page;
-        this.change$.next(this.createPaginationData());
+        this.updatePaginationData();
+
+        /** emit page changed */
+        this.page$.next(page);
     }
 
     /**
@@ -95,15 +114,16 @@ export class PaginationController {
         this.page  = settings.page;
 
         if (this.change$.observers.length) {
-            this.change$.next(this.createPaginationData());
+            this.updatePaginationData();
         }
     }
 
     /**
-     * update pagination data and notify observers
+     * update pagination data
      *
      */
-    private createPaginationData(): PaginationData {
+    private updatePaginationData() {
+
         const navigationFragments = this.createPaginationFragments();
         const paginationItems = this.convertToPaginationItem(navigationFragments);
 
@@ -118,7 +138,7 @@ export class PaginationController {
         };
 
         this.dataInitialized = true;
-        return data;
+        this.change$.next(data);
     }
 
     /**
@@ -140,7 +160,7 @@ export class PaginationController {
     }
 
     /**
-     * create pagination fragments like [1, 2, 3, ..., 10]
+     * create pagination fragments like [1, 2, 3, ..., total]
      *
      */
     private createPaginationFragments(): Array<string|number> {
@@ -154,6 +174,16 @@ export class PaginationController {
         } else {
             // create subpages
             const pages: number[] = [];
+
+            /**
+             * create middle pages
+             * l = last page, n = current page 
+             * 
+             * page 1: start with j =  0 -> [2, 3] skip first page 
+             * page n: start with j = -1 -> [n - 1, n, n + 1]
+             * page l: start with j = -2 -> [n - 2, n -1] skip last page
+             * 
+             */
             let j = page === 1 ? 0 : page === total ? -2 : -1;
 
             for (let i = 2; i >= 0; i--, j++) {
@@ -161,7 +191,14 @@ export class PaginationController {
                 !skip ? pages.push(page + j) : void 0;
             }
 
-            // create page fragment array
+            /**
+             * base template: [1, '...', '...', l] (l = last page)
+             * 
+             * page 1: move to index 1 and replace 1 item -> [1, pages, '...', l]
+             * page n: move to index 2 and replace 0 item -> [1, '...', pages, '...', l]
+             * page l: move to index 2 and replace 1 item -> [1, '...', pages, l]
+             *
+             */
             const start   = pages[0] - 1 === 1 ? 1 : 2;
             const replace = pages[0] - 1 > 1 && pages[pages.length - 1] + 1 < total ? 0 : 1;
             items.splice(start, replace, ...pages);

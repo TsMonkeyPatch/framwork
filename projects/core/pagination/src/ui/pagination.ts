@@ -67,14 +67,26 @@ export class Pagination implements OnInit, OnDestroy {
         this.subscription = null;
     }
 
+    /**
+     * goto page
+     * 
+     */
     goTo(item: PaginationItem) {
         this.paginationCtrl.goTo(item.value as number);
     }
 
+    /**
+     * goto next page
+     * 
+     */
     nextPage() {
         this.paginationCtrl.nextPage();
     }
 
+    /**
+     * goto prev page 
+     *
+     */
     prevPage() {
         this.paginationCtrl.prevPage();
     }
