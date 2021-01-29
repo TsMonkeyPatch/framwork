@@ -1,0 +1,13 @@
+:host {
+
+    .tsmp-pagination {
+
+        display: flex;
+        flex-direction: row;
+        list-style-type: none;
+
+        li:not(:last-child) {
+            margin: 0 .5rem 0 0;
+        }
+    }
+}
