@@ -61,8 +61,7 @@ export class PaginationController {
         }
 
         this.page = page;
-        this.change$.next(
-            this.createPaginationData());
+        this.change$.next(this.createPaginationData());
     }
 
     /**
@@ -106,7 +105,7 @@ export class PaginationController {
      */
     private createPaginationData(): PaginationData {
         const navigationFragments = this.createPaginationFragments();
-        const paginationItems = this.buildPaginationItem(navigationFragments);
+        const paginationItems = this.convertToPaginationItem(navigationFragments);
 
         const data: PaginationData = {
             data: {
@@ -123,10 +122,10 @@ export class PaginationController {
     }
 
     /**
-     * map data 
+     * map data array to pagination items
      *
      */
-    private buildPaginationItem(items: Array<string|number>): PaginationItem[] {
+    private convertToPaginationItem(items: Array<string|number>): PaginationItem[] {
 
         return items.map<PaginationItem>((item) => {
             let clickable = typeof item === 'number';
@@ -158,15 +157,13 @@ export class PaginationController {
             let j = page === 1 ? 0 : page === total ? -2 : -1;
 
             for (let i = 2; i >= 0; i--, j++) {
-                if (page + j === 1 || page + j === total) {
-                    continue;
-                }
-                pages.push(page + j);
+                const skip = page + j === 1 || page + j === total;
+                !skip ? pages.push(page + j) : void 0;
             }
 
             // create page fragment array
             const start   = pages[0] - 1 === 1 ? 1 : 2;
-            const replace = pages[0] - 1 > 1 && pages.slice(-1)[0] + 1 < total ? 0 : 1;
+            const replace = pages[0] - 1 > 1 && pages[pages.length - 1] + 1 < total ? 0 : 1;
             items.splice(start, replace, ...pages);
         }
         return items;
