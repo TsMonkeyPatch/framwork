@@ -97,7 +97,7 @@ app.component.html (i currently used bootstrap grid for the styles, this is not 
 <ng-template #paginationTemplate let-state="state">
     <ul class="tsmp-pagination">
         <li (click)="prevPage()"> < </li>
-        <li> {{data.active}} / {{data.total}}</li>
+        <li> {{state.active}} / {{state.total}}</li>
         <li (click)="nextPage()"> > </li>
     </ul>
 </ng-template>
@@ -133,12 +133,49 @@ Data which is passed to a template
 
 |name|type|description|
 |-|-|-|
-|items|PaginationItem|Page items like [1, '...', 5, 6, 7, '...', lastpage]|
-|state|PaginationState|All informations about current state|
+|clickable|boolean|item can activated, false for current page or '...'|
+|text|string|text for the pagination item|
+|value|string \| number|the current value for the pagination item|
 
-export interface PaginationItem {
-    clickable: boolean;
-    text: string;
-    value: string | number;
-}
+---
 
+### PaginationState 
+
+|name|type|description|
+|-|-|-|
+|active|number|current page which is active|
+|isLast|boolean|true if the active page is the last page|
+|isFirst|boolean|true if the active page is the first page|
+|total|number|total amount of pages|
+
+---
+
+### PaginationSetting 
+
+|name|type|description|
+|-|-|-|
+|page|number|current page which should be active|
+|total|boolean|total amount of pages|
+
+---
+
+### PaginationController
+
+#### Properties
+
+|name|type|description|
+|-|-|-|
+|change|Observable\<PaginationData\>|emits if the page data has been changed|
+|pageChange|Observable\<number\>|emits if the page has been changed|
+|@readonly settings|PaginationSetting|current settings for pagination|
+
+---
+
+#### Methods
+
+|name|type|description|
+|-|-|-|
+|goTo(page: number)|void|activate given page and update pagination data|
+|nextPage()|void|activate next page|
+|prevPage()|void|activate previous page|
+|update(setting: Setting)|void|update settings, update pagination data|
