@@ -1,5 +1,5 @@
-import { ElementRef, Host, OnDestroy } from '@angular/core';
-import { AfterViewInit, Directive, Input } from '@angular/core';
+import { ElementRef, Host, OnDestroy, OnInit } from '@angular/core';
+import { Directive, Input } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { TsMonkeyPatchOverlayControl } from './overlay.control';
@@ -7,7 +7,7 @@ import { TsMonkeyPatchOverlayControl } from './overlay.control';
 @Directive({
     selector: '[tsMonkeyPatchOverlayTrigger]'
 })
-export class TsMonkeyPatchOverlayTrigger implements AfterViewInit, OnDestroy {
+export class TsMonkeyPatchOverlayTrigger implements OnDestroy, OnInit {
 
     @Input()
     public tsMonkeyPatchOverlayTrigger: 'click' | 'hover' | 'focus';
@@ -23,7 +23,9 @@ export class TsMonkeyPatchOverlayTrigger implements AfterViewInit, OnDestroy {
      * view gets initialized
      *
      */
-    ngAfterViewInit() {
+    ngOnInit() {
+        this.overlayCtrl.disableTrigger();
+
         switch (this.tsMonkeyPatchOverlayTrigger) {
             case 'focus':
                 this.registerFocusListener();

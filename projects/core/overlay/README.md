@@ -38,7 +38,7 @@ export class AppModule {}
 
 ```html
 <!-- add directive to component, triggers on click -->
-<button type="button" [tsMonkeyPatchOverlay]="overlay"Show Overlay</button>
+<button type="button" [tsMonkeyPatchOverlay]="overlay">Show Overlay</button>
 
 <!--
     the overlay container which holds the overlay content

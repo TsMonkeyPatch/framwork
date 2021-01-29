@@ -1,7 +1,8 @@
-import { Directive, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, Renderer2, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, Renderer2, ViewContainerRef } from '@angular/core';
 import { ConnectedPosition, Overlay, OverlayRef, PositionStrategy } from '@angular/cdk/overlay';
 import { TsMonkeyPatchOverlay } from './overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { fromEvent, Subscription } from 'rxjs';
 
 export enum OverlayViewState {
     HIDDEN = 0,
@@ -11,7 +12,7 @@ export enum OverlayViewState {
 @Directive({
     selector: '[tsMonkeyPatchOverlay]',
 })
-export class TsMonkeyPatchOverlayControl implements OnDestroy {
+export class TsMonkeyPatchOverlayControl implements OnDestroy, AfterViewInit {
 
     @Input()
     public tsMonkeyPatchOverlay: TsMonkeyPatchOverlay = null;
@@ -41,12 +42,24 @@ export class TsMonkeyPatchOverlayControl implements OnDestroy {
      */
     private viewState = OverlayViewState.HIDDEN;
 
+    private isTriggerDisabled = false;
+
+    private triggerSubscription?: Subscription;
+
     public constructor(
         private el: ElementRef<HTMLElement>,
         private overlay: Overlay,
         private renderer: Renderer2,
         private viewRef: ViewContainerRef
     ) {}
+
+    /**
+     * disable default trigger
+     *
+     */
+    disableTrigger() {
+        this.isTriggerDisabled = true;
+    }
 
     /**
      * toggle between viewstate visible, hidden
@@ -80,6 +93,21 @@ export class TsMonkeyPatchOverlayControl implements OnDestroy {
     ngOnDestroy(): void {
         this.overlayRef.detach();
         this.overlayRef = null;
+
+        this.triggerSubscription?.unsubscribe();
+    }
+
+    /**
+     *
+     * 
+     */
+    ngAfterViewInit(): void {
+        if (this.isTriggerDisabled) {
+            return;
+        }
+
+        this.triggerSubscription = fromEvent(this.el.nativeElement, 'click')
+            .subscribe(() => this.toggleOverlay());
     }
     
     /**
