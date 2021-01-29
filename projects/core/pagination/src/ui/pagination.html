@@ -1,10 +1,10 @@
-<ng-template #defaultPaginationTemplate let-data="data" let-items="items">
+<ng-template #defaultPaginationTemplate let-state="state" let-items="items">
     <ul class="tsmp-pagination">
-        <button [disabled]="data.isFirst" (click)="prevPage()"><</button>
+        <button [disabled]="state.isFirst" (click)="prevPage()"><</button>
         <li *ngFor="let item of items" (click)="!item.clickable || goTo(item)">
             {{item.text}}
         </li>
-        <button [disabled]="data.isLast" (click)="nextPage()">></button>
+        <button [disabled]="state.isLast" (click)="nextPage()">></button>
     </ul>
 </ng-template>
 

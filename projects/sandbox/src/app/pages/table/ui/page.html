@@ -1,8 +1,8 @@
 <!-- TEMPLATES -->
-<ng-template #paginationTemplate let-data="data">
+<ng-template #paginationTemplate let-state="state">
     <ul class="tsmp-pagination">
         <li (click)="prevPage()"> < </li>
-        <li> {{data.active}} / {{data.total}}</li>
+        <li> {{state.active}} / {{state.total}}</li>
         <li (click)="nextPage()"> > </li>
     </ul>
 </ng-template>

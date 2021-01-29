@@ -128,13 +128,13 @@ export class PaginationController {
         const paginationItems = this.convertToPaginationItem(navigationFragments);
 
         const data: PaginationData = {
-            data: {
+            items: paginationItems,
+            state: {
                 active: this.page,
                 isFirst: this.page === 1,
                 isLast: this.page === this.total,
                 total: this.total
-            },
-            items: paginationItems,
+            }
         };
 
         this.dataInitialized = true;

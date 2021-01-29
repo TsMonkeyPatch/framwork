@@ -28,12 +28,12 @@ app.component.ts
 
 ```ts
 @Component({
-    selector: 'table-page',
+    selector: 'app-page',
     templateUrl: './page.html'
 })
-export class TablePage implements OnInit, OnDestroy {
+export class AppPage implements OnInit, OnDestroy {
 
-    private destroy$ = new Subject();
+    private destroy$: Subject<boolean> = new Subject();
 
     constructor(
         private paginationCtrl: PaginationController
@@ -94,7 +94,7 @@ app.component.html (i currently used bootstrap grid for the styles, this is not 
 
 ```html
 <!-- define your custom template -->
-<ng-template #paginationTemplate let-data="data">
+<ng-template #paginationTemplate let-state="state">
     <ul class="tsmp-pagination">
         <li (click)="prevPage()"> < </li>
         <li> {{data.active}} / {{data.total}}</li>
@@ -118,4 +118,27 @@ app.component.html (i currently used bootstrap grid for the styles, this is not 
 
 ## Api
 
-### TemplateData
+### PaginationData
+
+Data which is passed to a template
+
+|name|type|description|
+|-|-|-|
+|items|PaginationItem|Page items like [1, '...', 5, 6, 7, '...', lastpage]|
+|state|PaginationState|All informations about current state|
+
+---
+
+### PaginationItem 
+
+|name|type|description|
+|-|-|-|
+|items|PaginationItem|Page items like [1, '...', 5, 6, 7, '...', lastpage]|
+|state|PaginationState|All informations about current state|
+
+export interface PaginationItem {
+    clickable: boolean;
+    text: string;
+    value: string | number;
+}
+

@@ -9,12 +9,14 @@ export interface PaginationItem {
     value: string | number;
 }
 
+export interface PaginationState {
+    active: number;
+    isLast: boolean;
+    isFirst: boolean;
+    total: number;
+}
+
 export interface PaginationData {
     items: PaginationItem[];
-    data: {
-        active: number;
-        isLast: boolean;
-        isFirst: boolean;
-        total: number;
-    }
+    state: PaginationState;
 }
