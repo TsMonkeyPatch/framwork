@@ -8,7 +8,7 @@
         <ul class="navbar-nav w-100">
             <li class="nav-item flex-grow-0 flex-shrink-1">
                 <!-- simple overlay -->
-                <button type="button" class="btn btn-primary nav-item" [tsMonkeyPatchOverlay]="overlay" [tsMonkeyPatchOverlayTrigger]="'click'">Show Overlay</button>
+                <button type="button" class="btn btn-primary nav-item" [tsMonkeyPatchOverlay]="overlay">Show Overlay</button>
             </li>
             <li class="nav-item form-inline flex-grow-1 mx-3">
                 <label class="input-group nav-item w-100">
@@ -27,7 +27,8 @@
 </div>
 
 <div class="container main">
-    <router-outlet></router-outlet>
+    <app-data></app-data>
+    <app-data></app-data>
 </div>
 
 <div class="footer">

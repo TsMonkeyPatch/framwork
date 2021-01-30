@@ -1,3 +1,12 @@
+<!-- TEMPLATES -->
+<ng-template #paginationTemplate let-state="state">
+    <ul class="tsmp-pagination">
+        <li (click)="prevPage()"> < </li>
+        <li> {{state.active}} / {{state.total}}</li>
+        <li (click)="nextPage()"> > </li>
+    </ul>
+</ng-template>
+
 <div class="container-fluid">
 
     <div class="row">
@@ -8,11 +17,7 @@
 
         <div class="col d-flex flex-column">
             <table-actions></table-actions>
-
-            <table-view class="col">
-            </table-view>
-
-            <table-pagination></table-pagination>
+            <table-view class="col"></table-view>
         </div>
     </div>
 </div>

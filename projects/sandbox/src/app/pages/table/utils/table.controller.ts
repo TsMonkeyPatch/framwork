@@ -42,7 +42,8 @@ export class TableProvider {
         return this.data$.asObservable();
     }
 
-    constructor() {
+    constructor(
+    ) {
         this.model = new TableModel(ELEMENT_DATA);
     }
 
