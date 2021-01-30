@@ -71,7 +71,7 @@ export class PaginationController {
      *
      */
     goTo(page: number) {
-        if (page < 0 || page > this.total) {
+        if (page < 1 || page > this.total) {
             return;
         }
 
@@ -116,6 +116,8 @@ export class PaginationController {
         if (this.change$.observers.length) {
             this.updatePaginationData();
         }
+
+        this.page$.next(settings.page);
     }
 
     /**
@@ -181,7 +183,7 @@ export class PaginationController {
              * 
              * page 1: start with j =  0 -> [2, 3] skip first page 
              * page n: start with j = -1 -> [n - 1, n, n + 1]
-             * page l: start with j = -2 -> [n - 2, n -1] skip last page
+             * page l: start with j = -2 -> [n - 2, n - 1] skip last page
              * 
              */
             let j = page === 1 ? 0 : page === total ? -2 : -1;
