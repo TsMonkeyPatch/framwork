@@ -23,7 +23,6 @@
 }
 
 :host-context(.light) {
-    
     .tsmp-pagination li {
         background-color: color(lighten, 'background');
         color: color(lighten, 'color');
