@@ -123,7 +123,6 @@ export class PaginationController {
      *
      */
     private updatePaginationData() {
-
         const navigationFragments = this.createPaginationFragments();
         const paginationItems = this.convertToPaginationItem(navigationFragments);
 

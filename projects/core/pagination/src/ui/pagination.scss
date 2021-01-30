@@ -1,13 +1,31 @@
+@import '../../../assets/scss/utils/theme';
+
 :host {
 
     .tsmp-pagination {
-
         display: flex;
         flex-direction: row;
         list-style-type: none;
 
-        li:not(:last-child) {
-            margin: 0 .5rem 0 0;
+        li {
+            padding: 0 .25rem;
+            line-height: 2rem;
+            cursor: pointer;
         }
+    }
+}
+
+:host-context(.dark) {
+    .tsmp-pagination li {
+        background-color: color(darken, 'background');
+        color: color(darken, 'color')
+    }
+}
+
+:host-context(.light) {
+    
+    .tsmp-pagination li {
+        background-color: color(lighten, 'background');
+        color: color(lighten, 'color');
     }
 }

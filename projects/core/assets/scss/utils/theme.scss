@@ -1,0 +1,33 @@
+$themes: (
+    lighten: (
+        background: #FFF,
+        color: #000
+    ),
+    darken: (
+        background: #000,
+        color: #FFF
+    )
+);
+
+/**
+ * write theme colors to root
+ */
+@mixin themeCssColorVars($theme: lighten) {
+    :root {
+        @each $theme, $colors in $themes {
+            @each $name, $color in $colors {
+                --tsmp-#{$theme}-#{$name}: #{$color};
+            }
+        }
+    }
+}
+
+@function color($theme: lighten, $color, $prefix: tsmp) {
+
+    @if not $color {
+        @warn "no color specified";
+        @return null;
+    }
+
+    @return var(--#{$prefix}-#{$theme}-#{$color});
+}

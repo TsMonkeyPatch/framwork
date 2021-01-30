@@ -6,6 +6,7 @@
     "start": "ng serve sandbox",
     "build": "npm run build:core",
     "build:core": "ng build core",
+    "postbuild:core": "ncp projects/core/assets dist/core/assets",
     "install-library": "npm run install-library:core",
     "install-library:core": "npm i --save ./dist/core.tar.gz",
     "postbuild": "node ./bin/postbuild.js && npm run package && npm run install-library",
@@ -35,6 +36,7 @@
     "@angular/cli": "11.1.2",
     "@angular/compiler-cli": "11.0.6",
     "@types/node": "12.11.1",
+    "ncp": "^2.0.0",
     "ng-packagr": "11.0.0",
     "typescript": "4.0.5"
   }

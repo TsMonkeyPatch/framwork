@@ -20,9 +20,9 @@ export class AppComponent implements OnInit {
   }
 
   scrollToPageEnd() {
-    this.windowScrollProvider
-      .scrollTo({ top: 2000, behavior: 'smooth'})
-      .pipe(take(1))
-      .subscribe(() => console.log("scrolled to position"))
+    this.windowScrollProvider.scroll()
+      .subscribe((position) => console.log(
+        "scrolled to x: %i y: %i", position.top, position.left
+      ))
   }
 }

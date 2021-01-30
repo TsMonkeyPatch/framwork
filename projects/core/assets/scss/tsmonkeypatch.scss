@@ -1,0 +1,6 @@
+@import './utils/theme';
+
+// set colors
+@mixin tsMonkeyPatchTheme() {
+    @include themeCssColorVars();
+}
