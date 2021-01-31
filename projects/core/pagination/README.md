@@ -2,6 +2,11 @@
 
 Basic pagination module with customizeable template
 
+## Youtube
+
+[Pagination 1/2 - Source code](https://youtu.be/__nvKFrqREs)
+[Pagination 2/2 - apply custom template](https://youtu.be/Kx3t7UZhCYY)
+
 ## Usage
 
 ```ts
