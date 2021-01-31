@@ -18,12 +18,6 @@ export class PaginationController {
     private total = 1;
 
     /**
-     * amount of pages which should be shown
-     *
-     */
-    private display = 5;
-
-    /**
      * emits if the settings changed
      *
      */
@@ -41,6 +35,32 @@ export class PaginationController {
      *
      */
     private dataInitialized = false;
+
+    private displayCount = 5;
+
+    /**
+     * sets amount of pages which should be shown
+     *
+     */
+    set display(count: number) {
+        this.displayCount = count;
+
+        if (isNaN(count) || count < 1) {
+            this.displayCount = 5;
+        }
+
+        if(count % 2 === 0) {
+            this.displayCount = count - 1;
+        }
+    }
+
+    /**
+     * return display amount
+     *
+     */
+    get display(): number {
+        return this.displayCount;
+    }
 
     /**
      * @readonly settings the current settings
@@ -184,8 +204,8 @@ export class PaginationController {
             // create subpages
             const pages: number[] = [];
 
-            let i = this.display - 1; // 
-            let j = i / 2 * -1; // page count before and behind active page
+            let i = this.display - 1;
+            let j = Math.floor(i / 2) * -1;
 
             for (;i >= 0; i--, j++) {
                 const skip = page + j <= 1 || page + j >= total;
