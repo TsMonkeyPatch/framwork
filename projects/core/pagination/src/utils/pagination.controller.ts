@@ -18,6 +18,12 @@ export class PaginationController {
     private total = 1;
 
     /**
+     * amount of pages which should be shown
+     *
+     */
+    private display = 5;
+
+    /**
      * emits if the settings changed
      *
      */
@@ -110,8 +116,9 @@ export class PaginationController {
      *
      */
     update(settings: Settings) {
-        this.total = settings.total;
-        this.page  = settings.page;
+        this.total   = settings.total;
+        this.page    = settings.page;
+        this.display = settings.displayCount || this.display;
 
         if (this.change$.observers.length) {
             this.updatePaginationData();
@@ -169,7 +176,7 @@ export class PaginationController {
         const {page, total} = this.settings;
         const items: Array<string|number> = total > 5 ? [1, '...', '...', total] : [];
 
-        if (total <= 5) {
+        if (total <= this.display) {
             for (let i = 0; i < total; i++) {
                 items.push(i);
             }
@@ -177,19 +184,11 @@ export class PaginationController {
             // create subpages
             const pages: number[] = [];
 
-            /**
-             * create middle pages
-             * l = last page, n = current page 
-             * 
-             * page 1: start with j =  0 -> [2, 3] skip first page 
-             * page n: start with j = -1 -> [n - 1, n, n + 1]
-             * page l: start with j = -2 -> [n - 2, n - 1] skip last page
-             * 
-             */
-            let j = page === 1 ? 0 : page === total ? -2 : -1;
+            let i = this.display - 1; // 
+            let j = i / 2 * -1; // page count before and behind active page
 
-            for (let i = 2; i >= 0; i--, j++) {
-                const skip = page + j === 1 || page + j === total;
+            for (;i >= 0; i--, j++) {
+                const skip = page + j <= 1 || page + j >= total;
                 !skip ? pages.push(page + j) : void 0;
             }
 
