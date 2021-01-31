@@ -1,6 +1,6 @@
 # TsMonkeyPatch Core
 
-Angular Library with several modules created as part of the [YouTube project](https://www.youtube.com/results?search_query=TsMonkeyPatch) which is constantly growing. Each module can be imported and used separately.
+Angular Library with several modules created as part of the [YouTube project](https://www.youtube.com/channel/UCq6b8A1Je9oPdJAoorfeDQw) which is constantly growing. Each module can be imported and used separately.
 
 ## Install
 
@@ -34,17 +34,8 @@ export class AppModule {
 
 ## Modules
 
-### [TsMonkeyPatchCommonModule]()
-
-#### Directives
-
-- [Sticky](https://github.com/TsMonkeyPatch/framwork/tree/master/projects/core/common/docs/sticky.md)
-Simple directive the html element stays on top if we scrolled down.
-
-#### Providers
-
-- [WindowScroll](https://github.com/TsMonkeyPatch/framwork/tree/master/projects/core/common/docs/window-scroll.md)
-Provider to observe window scroll event or scroll to a specific position.
+### [TsMonkeyPatchCommonModule](https://github.com/TsMonkeyPatch/framwork/tree/master/projects/core/common/README.md)
+Collection of directives and services which can generally be used.
 
 ---
 
