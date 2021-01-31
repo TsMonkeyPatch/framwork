@@ -1,5 +1,19 @@
 export interface Settings {
+    /**
+     * amount of fragments which will created for navigation
+     * default 5
+     *
+     */
+    displayCount?: number;
+    /**
+     * current page
+     *
+     */
     page: number;
+    /**
+     * total count of pages
+     *
+     */
     total: number;
 }
 
