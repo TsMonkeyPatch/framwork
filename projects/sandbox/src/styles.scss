@@ -3,9 +3,16 @@
 @import "./assets/scss/colors";
 @import "~@tsmonkeypatch/core/assets/scss/tsmonkeypatch";
 
-@include tsMonkeyPatchTheme();
 
 html, body {
     height: 100%;
     min-height: 100%;
 }
+
+$newTheme: (
+    light: (
+        color: green
+    )
+);
+
+@include TsMonkeyPatchTheme($newTheme);

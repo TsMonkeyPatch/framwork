@@ -1,4 +1,4 @@
-@import '../../../assets/scss/utils/theme';
+@import "../../../assets/scss/function/theme-color";
 
 :host {
 
@@ -11,17 +11,10 @@
 
         li {
             padding: 0 .5rem;
-            border: 1px solid #000;
-            border-width: 1px 0;
+            line-height: 1.5rem;
 
             &.clickable {
                 cursor: pointer;
-            }
-
-            button {
-                border: 0;
-                padding: 0;
-                background: transparent;
             }
 
             &:first-child {
@@ -35,23 +28,35 @@
             }
 
             &.active {
-                color: lighten(#000 , 60);
                 font-weight: bold;
             }
         }
     }
-}
 
-:host-context(.dark) {
-    .tsmp-pagination li {
-        background-color: color(darken, 'background');
-        color: color(darken, 'color')
+    .nav-btn {
+
+        &:not(.disabled) {
+            cursor: pointer;
+        }
+
+        &.disabled {
+            opacity: .3;
+        }
     }
 }
 
 :host-context(.light) {
+
     .tsmp-pagination li {
-        background-color: color(lighten, 'background');
-        color: color(lighten, 'color');
+        background: resolveColor(light, background);
+        color: resolveColor(light, color);
+    }
+}
+
+:host-context(.dark) {
+
+    .tsmp-pagination li {
+        background: resolveColor(dark, background);
+        color: resolveColor(dark, color);
     }
 }

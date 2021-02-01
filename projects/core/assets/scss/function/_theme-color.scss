@@ -1,0 +1,9 @@
+@function resolveColor($theme: light, $color) {
+
+    @if not $color {
+        @warn "no color has been passed";
+        @return inherit;
+    }
+
+    @return var(--tsmp-#{$theme}-#{$color});
+}
