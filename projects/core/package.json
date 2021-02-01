@@ -1,7 +1,7 @@
 {
   "name": "@tsmonkeypatch/core",
   "description": "Angular Library with several modules created as part of the YouTube project (https://www.youtube.com/results?search_query=TsMonkeyPatch) which is constantly growing. Each module can be imported and used separately.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/TsMonkeyPatch/framwork/tree/development/projects/core"
