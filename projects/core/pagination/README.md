@@ -161,6 +161,7 @@ Data which is passed to a template
 |-|-|-|
 |page|number|current page which should be active|
 |total|boolean|total amount of pages|
+|displayCount *optional*|number|maximum amount of pages which should be shown at once (default 5)|
 
 ---
 

@@ -1,0 +1,20 @@
+@import "./variables/theme";
+@import "./function/deep-merge";
+
+@mixin TsMonkeyPatchTheme($newTheme: null) {
+
+    $defaultTheme: $themes;
+
+    @if ($newTheme) {
+        $defaultTheme: non-destructive-map-merge($defaultTheme, $newTheme);
+    }
+
+    :root {
+        @each $theme, $colors in $defaultTheme {
+            @each $name, $color in $colors {
+                --tsmp-#{$theme}-#{$name}: #{$color};
+            }
+        }
+    }
+}
+

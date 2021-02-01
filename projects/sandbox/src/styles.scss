@@ -1,8 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap-scss/bootstrap";
 @import "./assets/scss/colors";
+@import "~@tsmonkeypatch/core/assets/scss/tsmonkeypatch";
+
 
 html, body {
     height: 100%;
     min-height: 100%;
 }
+
+$newTheme: (
+    light: (
+        color: green
+    )
+);
+
+@include TsMonkeyPatchTheme($newTheme);

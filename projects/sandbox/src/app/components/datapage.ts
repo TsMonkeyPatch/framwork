@@ -15,8 +15,7 @@ export class DataPage implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.paginationController.update({ page: 1, total: 30});
-
+        this.paginationController.update({ page: 1, total: 30, displayCount: 5 });
         this.paginationController.pageChange
             .subscribe((page) => this.page = page);
     }

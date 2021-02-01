@@ -1,7 +1,8 @@
+@import "../../../assets/scss/function/theme-color";
+
 :host {
 
     .tsmp-pagination {
-
         display: flex;
         flex-direction: row;
         list-style-type: none;
@@ -10,17 +11,10 @@
 
         li {
             padding: 0 .5rem;
-            border: 1px solid #000;
-            border-width: 1px 0;
+            line-height: 1.5rem;
 
             &.clickable {
                 cursor: pointer;
-            }
-
-            button {
-                border: 0;
-                padding: 0;
-                background: transparent;
             }
 
             &:first-child {
@@ -34,9 +28,35 @@
             }
 
             &.active {
-                color: lighten(#000 , 60);
                 font-weight: bold;
             }
         }
+    }
+
+    .nav-btn {
+
+        &:not(.disabled) {
+            cursor: pointer;
+        }
+
+        &.disabled {
+            opacity: .3;
+        }
+    }
+}
+
+:host-context(.light) {
+
+    .tsmp-pagination li {
+        background: resolveColor(light, background);
+        color: resolveColor(light, color);
+    }
+}
+
+:host-context(.dark) {
+
+    .tsmp-pagination li {
+        background: resolveColor(dark, background);
+        color: resolveColor(dark, color);
     }
 }
