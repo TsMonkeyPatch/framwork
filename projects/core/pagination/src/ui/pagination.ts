@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { PaginationData, PaginationItem } from '../api';
-import { PaginationController } from '../utils/pagination.controller';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, Output, Input, TemplateRef, ChangeDetectorRef, EventEmitter } from "@angular/core";
+import { PaginationController } from "../utils/pagination.controller";
+import { PaginationData, PaginationItem } from "../api";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: 'tsmp-pagination',
@@ -21,13 +21,10 @@ export class Pagination implements OnInit, OnDestroy {
      * data for our template
      *
      */
-    public templateData: PaginationData;
+    public data: PaginationData;
 
-    /**
-     * all items we have
-     *
-     */
-    items: Array<string|number> = [];
+    @Input()
+    template: TemplateRef<PaginationData>;
 
     /**
      * page selected
@@ -35,13 +32,6 @@ export class Pagination implements OnInit, OnDestroy {
      */
     @Output()
     selectPage: EventEmitter<number> = new EventEmitter();
-
-    /**
-     * add custom pagination template
-     *
-     */
-    @Input()
-    template: TemplateRef<PaginationData>
 
     public constructor(
         private paginationCtrl: PaginationController,
@@ -54,7 +44,7 @@ export class Pagination implements OnInit, OnDestroy {
      */
     ngOnInit() {
         this.subscription = this.paginationCtrl.change
-            .subscribe((data) => this.render(data))
+            .subscribe((data) => this.render(data));
     }
 
     /**
@@ -96,7 +86,7 @@ export class Pagination implements OnInit, OnDestroy {
      *
      */
     private render(data: PaginationData) {
-        this.templateData = data;
+        this.data = data;
         this.cdRef.markForCheck();
     }
 }

@@ -2,6 +2,11 @@
 
 Basic pagination module with customizeable template
 
+## Youtube
+
+[Pagination 1/2 - Source code](https://youtu.be/__nvKFrqREs)
+[Pagination 2/2 - apply custom template](https://youtu.be/Kx3t7UZhCYY)
+
 ## Usage
 
 ```ts
@@ -156,6 +161,7 @@ Data which is passed to a template
 |-|-|-|
 |page|number|current page which should be active|
 |total|boolean|total amount of pages|
+|displayCount *optional*|number|maximum amount of pages which should be shown at once (default 5)|
 
 ---
 

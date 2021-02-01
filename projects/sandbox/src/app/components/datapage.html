@@ -1,0 +1,17 @@
+<ng-template #paginationTemplate let-state="state">
+    <ul class="tsmp-pagination">
+        <li>
+            <button [disabled]="state.isFirst" (click)="prevPage()"><</button>
+        </li>
+        <li>{{state.active}} / {{state.total}}</li>
+        <li>
+            <button [disabled]="state.isLast" (click)="nextPage()">></button>
+        </li>
+    </ul>
+</ng-template>
+
+<tsmp-pagination [template]="paginationTemplate"></tsmp-pagination>
+
+<h3>showing page: {{page}}</h3>
+
+<tsmp-pagination></tsmp-pagination>

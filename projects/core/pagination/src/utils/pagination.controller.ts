@@ -36,6 +36,32 @@ export class PaginationController {
      */
     private dataInitialized = false;
 
+    private displayCount = 5;
+
+    /**
+     * sets amount of pages which should be shown
+     *
+     */
+    set display(count: number) {
+        this.displayCount = count;
+
+        if (isNaN(count) || count < 1) {
+            this.displayCount = 5;
+        }
+
+        if(count % 2 === 0) {
+            this.displayCount = count - 1;
+        }
+    }
+
+    /**
+     * return display amount
+     *
+     */
+    get display(): number {
+        return this.displayCount;
+    }
+
     /**
      * @readonly settings the current settings
      *
@@ -71,7 +97,7 @@ export class PaginationController {
      *
      */
     goTo(page: number) {
-        if (page < 0 || page > this.total) {
+        if (page < 1 || page > this.total) {
             return;
         }
 
@@ -110,12 +136,15 @@ export class PaginationController {
      *
      */
     update(settings: Settings) {
-        this.total = settings.total;
-        this.page  = settings.page;
+        this.total   = settings.total;
+        this.page    = settings.page;
+        this.display = settings.displayCount || this.display;
 
         if (this.change$.observers.length) {
             this.updatePaginationData();
         }
+
+        this.page$.next(settings.page);
     }
 
     /**
@@ -166,7 +195,7 @@ export class PaginationController {
         const {page, total} = this.settings;
         const items: Array<string|number> = total > 5 ? [1, '...', '...', total] : [];
 
-        if (total <= 5) {
+        if (total <= this.display) {
             for (let i = 0; i < total; i++) {
                 items.push(i);
             }
@@ -174,19 +203,11 @@ export class PaginationController {
             // create subpages
             const pages: number[] = [];
 
-            /**
-             * create middle pages
-             * l = last page, n = current page 
-             * 
-             * page 1: start with j =  0 -> [2, 3] skip first page 
-             * page n: start with j = -1 -> [n - 1, n, n + 1]
-             * page l: start with j = -2 -> [n - 2, n -1] skip last page
-             * 
-             */
-            let j = page === 1 ? 0 : page === total ? -2 : -1;
+            let i = this.display - 1;
+            let j = Math.floor(i / 2) * -1;
 
-            for (let i = 2; i >= 0; i--, j++) {
-                const skip = page + j === 1 || page + j === total;
+            for (;i >= 0; i--, j++) {
+                const skip = page + j <= 1 || page + j >= total;
                 !skip ? pages.push(page + j) : void 0;
             }
 

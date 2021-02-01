@@ -52,10 +52,10 @@ export class AppModule {}
 
 ### 2.1. Custom trigger 
 
-Usage of a custom trigger (default click) possible values are **click(default)**, **focus**, **hover**.
+Usage of a custom trigger possible values are **click(default)**, **focus**, **hover**.
 
 ```html
-<!-- add directive to component, triggers on click -->
+<!-- add directive to component, triggers on hover and dismiss on mouseout -->
 <button [tsMonkeyPatchOverlay]="overlay" [tsMonkeyPatchOverlayTrigger]="'hover'" >
     hover me
 </button>
@@ -78,7 +78,7 @@ maybe useful to set this on host. So the overlay will become the same width as i
 in this case the input field.
 
 ```html
-<!-- add directive to component, triggers on click -->
+<!-- add directive to component, triggers on focus and dismiss on blur -->
 <input type="text" 
     [tsMonkeyPatchOverlay]="overlay"
     [tsMonkeyPatchOverlayTrigger]="'focus'"
