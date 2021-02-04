@@ -27,7 +27,10 @@
       "forms": [
         "dist/forms/forms",
         "dist/forms"
-      ]
+      ],
+      "@core/*": [
+        "./projects/core/*"
+      ] 
     }
   },
   "angularCompilerOptions": {

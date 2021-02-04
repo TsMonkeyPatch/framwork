@@ -12,6 +12,7 @@ export class AppComponent implements OnInit {
 
   title = 'sandbox';
 
+  public data: number[] = Array.from(Array(40)).map((value ,index) => index);
 
   public constructor(
     private windowScrollProvider: WindowScrollProvider,

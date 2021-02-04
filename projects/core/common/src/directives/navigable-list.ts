@@ -1,5 +1,32 @@
 import { AfterViewInit, ContentChildren, Directive, ElementRef, EventEmitter, HostListener, Output, QueryList } from '@angular/core';
 import { FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
+import { AsyncEvent } from '../utils/async-event';
+
+export enum KEY_CODE {
+    ARROW_DOWN = "ArrowDown",
+    ARROW_UP = "ArrowUp"
+}
+
+export interface NavigableListBeforeNextEvent {
+
+    /**
+     * event container to get the result of the event
+     *
+     */
+    event: AsyncEvent;
+
+    /**
+     * current keycode , arrow down or up 
+     *
+     */
+    key: KEY_CODE;
+
+    /**
+     * item index which is currently active
+     *
+     */
+    index: number;
+}
 
 /**
  * Directive for a focusable item
@@ -21,7 +48,7 @@ export class TsMonkeyPatchNavigableListItem implements FocusableOption {
     onFocus: EventEmitter<void> = new EventEmitter();
 
     constructor(
-        private el: ElementRef<HTMLElement>
+        private el: ElementRef<HTMLElement>,
     ) {}
 
     /**
@@ -45,6 +72,14 @@ export class TsMonkeyPatchNavigableListItem implements FocusableOption {
 export class  TsMonkeyPatchNavigableList implements AfterViewInit {
 
     /**
+     * before next item event
+     * this emits an async event where we can wait for a response
+     *
+     */
+    @Output()
+    private beforeNextItem: EventEmitter<NavigableListBeforeNextEvent> = new EventEmitter();
+
+    /**
      * all content children which are focusable
      *
      */
@@ -63,8 +98,7 @@ export class  TsMonkeyPatchNavigableList implements AfterViewInit {
      *
      */
     ngAfterViewInit() {
-        this.focusKeyManager = new FocusKeyManager(this.items)
-            .withWrap();
+        this.focusKeyManager = new FocusKeyManager(this.items).withWrap();
     }
 
     /**
@@ -73,6 +107,43 @@ export class  TsMonkeyPatchNavigableList implements AfterViewInit {
      */
     @HostListener('keydown', ['$event'])
     onKeydown($event: KeyboardEvent) {
-        this.focusKeyManager.onKeydown($event);
+        this.beforeNextItem.observers.length && this.focusKeyManager.activeItem
+            ? this.beforeNext($event)
+            : this.focusKeyManager.onKeydown($event);
+    }
+
+    /**
+     *
+     *
+     */
+    setActiveItem(index: number) {
+        this.focusKeyManager.setActiveItem(index);
+        this.focusKeyManager.activeItem.focus();
+    }
+
+    /**
+     * handle before next
+     * 
+     */
+    private async beforeNext($event: KeyboardEvent) {
+
+        const key = $event.key;
+
+        if (key === KEY_CODE.ARROW_UP || key === KEY_CODE.ARROW_DOWN) {
+            
+            $event.stopPropagation();
+            $event.preventDefault();
+
+            const event     = new AsyncEvent();
+            const keyCode   = key === KEY_CODE.ARROW_DOWN ? KEY_CODE.ARROW_DOWN : KEY_CODE.ARROW_UP;
+            const direction = key === KEY_CODE.ARROW_DOWN ? 1 : -1;
+            const index     = this.focusKeyManager.activeItemIndex + direction;
+
+            event.completed.subscribe((result) => {
+                result ? this.focusKeyManager.onKeydown($event) : void 0;
+            });
+
+            this.beforeNextItem.emit({ event, key: keyCode, index });
+        }
     }
 }

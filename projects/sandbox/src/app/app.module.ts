@@ -1,10 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-
 import { TsMonkeyPatchCommonModule } from '@tsmonkeypatch/core/common';
 import { TsMonkeyPatchOverlayModule } from '@tsmonkeypatch/core/overlay';
 import { TsMonkeyPatchPaginationModule } from '@tsmonkeypatch/core/pagination';
+
+import { TsMonkeyPatchDatalistModule } from '@core/data-list/src/datalist.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,7 +21,8 @@ import { DataPage } from './components/datapage';
     BrowserModule,
     TsMonkeyPatchCommonModule,
     TsMonkeyPatchOverlayModule,
-    TsMonkeyPatchPaginationModule
+    TsMonkeyPatchPaginationModule,
+    TsMonkeyPatchDatalistModule
   ],
   providers: [],
   bootstrap: [AppComponent]
