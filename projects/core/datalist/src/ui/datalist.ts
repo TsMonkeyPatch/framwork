@@ -109,7 +109,6 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
         if (this.dataChanged && this.direction !== 0 && !this.isMouseScroll) {
             this.navigableList.setActiveItem(this.direction < 0 ? 0 : this.displayCount - 1);
         }
-
         this.dataChanged = false;
     }
 
@@ -156,10 +155,12 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
      * 
      */
     onBeforeNext(beforeNext: NavigableListBeforeNextEvent) {
-        const next      = beforeNext.index;
-        const cancel    = next >= this.displayCount || next < 0;
 
         this.direction = beforeNext.key === KEY_CODE.ARROW_DOWN ? 1 : -1;
+        this.isMouseScroll = false;
+
+        const next   = beforeNext.index;
+        const cancel = next >= this.displayCount || next < 0;
 
         if (cancel) {
             this.direction === -1 ? this.prevItem() : this.nextItem();
@@ -168,8 +169,6 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
         }
 
         beforeNext.event.done();
-        /** navigation is proudly presents by the keyboard */
-        this.isMouseScroll = false;
     }
 
     setActiveItem(index: number) {
