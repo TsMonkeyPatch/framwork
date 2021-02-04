@@ -1,0 +1,5 @@
+<ul tsmpNavigableList (beforeNextItem)="onBeforeNext($event)" >
+    <li *ngFor="let item of items | async; let i = index" tsmpNavigableListItem (click)="setActiveItem(i)">
+        {{item}}
+    </li>
+</ul>
