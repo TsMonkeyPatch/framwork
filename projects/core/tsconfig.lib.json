@@ -10,7 +10,10 @@
     "lib": [
       "dom",
       "es2018"
-    ]
+    ],
+    "paths": {
+      "@self/*": ["./core/*"]
+    }
   },
   "angularCompilerOptions": {
     "skipTemplateCodegen": true,

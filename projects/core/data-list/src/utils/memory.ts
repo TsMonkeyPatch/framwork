@@ -14,7 +14,7 @@ export class MemoryDataProvider<T> extends DataProvider<T> {
     }
 
     canLoad(start: number, count: number): boolean {
-        return start >= 0 && start + count < this.data.length
+        return start >= 0 && start + count <= this.data.length
     }
 
     /**

@@ -5,7 +5,7 @@ import { TsMonkeyPatchCommonModule } from '@tsmonkeypatch/core/common';
 import { TsMonkeyPatchOverlayModule } from '@tsmonkeypatch/core/overlay';
 import { TsMonkeyPatchPaginationModule } from '@tsmonkeypatch/core/pagination';
 
-import { TsMonkeyPatchDatalistModule } from './modules/data-list/datalist.module';
+import { TsMonkeyPatchDatalistModule } from '@core/data-list/src/datalist.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';

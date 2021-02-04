@@ -1,6 +1,8 @@
-import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { KEY_CODE, NavigableListBeforeNextEvent, TsMonkeyPatchNavigableList } from '@core/common';
 import { fromEvent, ReplaySubject, Subscription } from 'rxjs';
-import { filter, take, takeUntil, tap } from 'rxjs/operators';
+import { filter, finalize, take, takeUntil, tap } from 'rxjs/operators';
+
 import { DataProvider } from '../utils/data.provider';
 import { MemoryDataProvider } from '../utils/memory';
 
@@ -10,7 +12,7 @@ import { MemoryDataProvider } from '../utils/memory';
     styleUrls: ['./datalist.scss'],
     exportAs: "datalist"
 })
-export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy {
+export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChecked {
 
     /**
      * item stream
@@ -24,6 +26,13 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy {
      */
     @Input()
     displayCount = 10;
+
+    /**
+     * flage data has been changed so we could update the current state 
+     * of navigable list item
+     *
+     */
+    private dataChanged = false;
 
     /**
      * 
@@ -50,6 +59,29 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy {
     private isMouserOver = false;
 
     /**
+     * boolean flag we scrolled with our mouse
+     * this is only important if we update the selected item 
+     * in the navigable list
+     *
+     */
+    private isMouseScroll = false;
+
+    /**
+     * direction we move currently -1 = up and 1 = down
+     * this is only interesting for keyboard navigation and navigable list
+     *
+     */
+    private direction = 0;
+
+    /**
+     *
+     *
+     */
+    @ViewChild(TsMonkeyPatchNavigableList, { read:  TsMonkeyPatchNavigableList, static: true })
+    private navigableList: TsMonkeyPatchNavigableList;
+
+    /**
+     *
      *
      */
     @Input()
@@ -69,14 +101,34 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy {
     ) {}
 
     /**
-     * initialize component
+     * if we move with the arrow keys we have to check current position
+     *
+     */
+    ngAfterViewChecked() {
+        if (this.dataChanged && this.direction !== 0 && !this.isMouseScroll) {
+            this.navigableList.setActiveItem(this.direction < 0 ? 0 : this.displayCount - 1);
+        }
+
+        this.dataChanged = false;
+    }
+
+    /**
+     * initialize component and register to datasource loaded
+     * stream, also load first 5 items
      * 
      */
     ngOnInit(): void {
-        this.subscription = this.dataSource?.loaded.subscribe(this.items);
+        this.subscription = this.dataSource?.loaded
+            .pipe(tap(() => this.dataChanged = true))
+            .subscribe(this.items);
+
         this.loadItems(0);
     }
 
+    /**
+     *
+     *
+     */
     ngOnDestroy() {
         this.subscription.unsubscribe();
         this.subscription = null;
@@ -99,6 +151,31 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy {
     }
 
     /**
+     * on before next item
+     * 
+     */
+    onBeforeNext(beforeNext: NavigableListBeforeNextEvent) {
+        const next      = beforeNext.index;
+        const cancel    = next >= this.displayCount || next < 0;
+
+        this.direction = beforeNext.key === KEY_CODE.ARROW_DOWN ? 1 : -1;
+
+        if (cancel) {
+            this.direction === -1 ? this.prevItem() : this.nextItem();
+            beforeNext.event.cancel();
+            return;
+        }
+
+        beforeNext.event.done();
+        /** navigation is proudly presents by the keyboard */
+        this.isMouseScroll = false;
+    }
+
+    setActiveItem(index: number) {
+        this.navigableList.setActiveItem(index);
+    }
+
+    /**
      * load next data
      *
      */
@@ -111,6 +188,7 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy {
 
     /**
      * listen on mouseove, if true we listen
+     * @outsource this to directive
      *
      */
     @HostListener('mouseover', ['$event'])
@@ -125,11 +203,16 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy {
             );
 
             fromEvent<WheelEvent>(this.el.nativeElement, 'mousewheel')
-                .pipe(takeUntil(mouseout$))
+                .pipe(
+                    finalize(() => this.isMouseScroll = false),
+                    takeUntil(mouseout$),
+                )
                 .subscribe(($event) => {
                     $event.stopPropagation();
                     $event.preventDefault();
                     $event.deltaY < 0 ? this.prevItem() : this.nextItem();
+
+                    this.isMouseScroll = true;
                 });
 
             this.isMouserOver = true;
