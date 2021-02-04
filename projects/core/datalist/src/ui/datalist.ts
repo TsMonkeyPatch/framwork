@@ -2,7 +2,7 @@ import { AfterViewChecked, Component, ElementRef, HostListener, Input, OnDestroy
 import { fromEvent, ReplaySubject, Subscription } from 'rxjs';
 import { filter, finalize, take, takeUntil, tap } from 'rxjs/operators';
 
-import { KEY_CODE, NavigableListBeforeNextEvent, TsMonkeyPatchNavigableList } from '@tsmonkeypatch/core/common';
+import { NavigableListEvent, TsMonkeyPatchNavigableList } from '@tsmonkeypatch/core/common';
 
 import { DataProvider } from '../utils/data.provider';
 import { MemoryDataProvider } from '../utils/memory';
@@ -108,8 +108,8 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
     ngAfterViewChecked() {
         if (this.dataChanged && this.direction !== 0 && !this.isMouseScroll) {
             this.navigableList.setActiveItem(this.direction < 0 ? 0 : this.displayCount - 1);
+            this.dataChanged = false;
         }
-        this.dataChanged = false;
     }
 
     /**
@@ -154,21 +154,21 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
      * on before next item
      * 
      */
-    onBeforeNext(beforeNext: NavigableListBeforeNextEvent) {
+    onNavigate(event: NavigableListEvent) {
 
-        this.direction = beforeNext.key === KEY_CODE.ARROW_DOWN ? 1 : -1;
+        this.direction = event.params.direction;
         this.isMouseScroll = false;
 
-        const next   = beforeNext.index;
+        const next   = event.params.index;
         const cancel = next >= this.displayCount || next < 0;
 
         if (cancel) {
             this.direction === -1 ? this.prevItem() : this.nextItem();
-            beforeNext.event.cancel();
+            event.cancel();
             return;
         }
 
-        beforeNext.event.done();
+        event.next();
     }
 
     setActiveItem(index: number) {
@@ -191,8 +191,8 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
      * @outsource this to directive
      *
      */
-    @HostListener('mouseover', ['$event'])
-    protected registerMouseControlEvents($event: MouseEvent) {
+    @HostListener('mouseover')
+    protected registerMouseControlEvents() {
 
         if (!this.isMouserOver) {
 
