@@ -1,0 +1,13 @@
+
+:host {
+
+    li[tsmpNavigableListItem] {
+
+        box-sizing: border-box;
+
+        &:focus {
+            background: #8D8D8D;
+            outline: none;
+        }
+    }
+}
