@@ -11,13 +11,17 @@ export class InfiniteDataSource extends DataProvider<number> {
         return true;
     }
 
-
     /**
-     * we simple return an array every time where each number will increased by one
+     * we simple return an array every time with new numbers
      *
      */
     protected fetch(start: number, count: number): Observable<number[]> {
-        const data = Array.from({length: count}).map(() => start + 1);
+
+        const data = Array(count);
+        for(let i = start, j = 0; i < start + count; i++, j++) {
+            data[j] = start + i;
+        }
+
         return of(data);
     }
 }
