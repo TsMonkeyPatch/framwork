@@ -18,10 +18,11 @@ export class InfiniteDataSource extends DataProvider<number> {
     protected fetch(start: number, count: number): Observable<number[]> {
 
         const data = Array(count);
-        for(let i = start, j = 0; i < start + count; i++, j++) {
-            data[j] = start + i;
-        }
+        const max = start + count;
 
+        for(let i = start, j = 0; i < max; i++, j++) {
+            data[j] = i;
+        }
         return of(data);
     }
 }

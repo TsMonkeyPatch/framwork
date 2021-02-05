@@ -48,3 +48,9 @@ Basic pagination module with interchangeable template.
 ### [TsMonkeyPatchOverlayModule](https://github.com/TsMonkeyPatch/framwork/tree/master/projects/core/overlay/README.md)
 
 Creates an empty dropdown / overlay which is aligned to an element, can be used for tooltips, combobox, menu or anything else.
+
+---
+
+### [TsMonkeyPatchDatalistModule](https://github.com/TsMonkeyPatch/framwork/tree/master/projects/core/datalist/README.md)
+
+Datalist which lazy loads and render only a specific amount of items, could handle large datasets with more then millions of entries.

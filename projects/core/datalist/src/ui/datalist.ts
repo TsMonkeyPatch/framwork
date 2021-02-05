@@ -1,9 +1,7 @@
-import { AfterViewChecked, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { fromEvent, ReplaySubject, Subscription } from 'rxjs';
-import { filter, finalize, take, takeUntil, tap } from 'rxjs/operators';
-
+import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { fromEvent, ReplaySubject, Subject } from 'rxjs';
+import { filter, finalize, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { NavigableListEvent, TsMonkeyPatchNavigableList } from '@tsmonkeypatch/core/common';
-
 import { DataProvider } from '../utils/data.provider';
 import { MemoryDataProvider } from '../utils/memory';
 
@@ -11,7 +9,8 @@ import { MemoryDataProvider } from '../utils/memory';
     selector: 'tsmp-datalist',
     templateUrl: './datalist.html',
     styleUrls: ['./datalist.scss'],
-    exportAs: "datalist"
+    exportAs: "datalist",
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChecked {
 
@@ -19,97 +18,95 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
      * item stream
      *
      */
-    items: ReplaySubject<T[]> = new ReplaySubject();
+    items: ReplaySubject<T[]> = new ReplaySubject()
 
     /**
      * max display count of items
      *
      */
     @Input()
-    displayCount = 10;
+    displayCount = 10
 
     /**
      * flage data has been changed so we could update the current state 
      * of navigable list item
      *
      */
-    private dataChanged = false;
+    private dataChanged = false
 
     /**
      * 
      * 
      */
-    private dataSource: DataProvider;
+    private dataSource: DataProvider
 
     /**
      * start index
      *
      */
-    private start = 0;
+    private start = 0
 
     /**
      *
      *
      */
-    private subscription: Subscription;
-
-    /**
-     *
-     *
-     */
-    private isMouserOver = false;
-
-    /**
-     * boolean flag we scrolled with our mouse
-     * this is only important if we update the selected item 
-     * in the navigable list
-     *
-     */
-    private isMouseScroll = false;
+    private destroy$: Subject<boolean> = new Subject()
 
     /**
      * direction we move currently -1 = up and 1 = down
      * this is only interesting for keyboard navigation and navigable list
      *
      */
-    private direction = 0;
+    private direction = 0
+
+    /**
+     * flag we used mouse scroll to load more data
+     *
+     */
+    private isMouseScroll = false
 
     /**
      *
      *
      */
     @ViewChild(TsMonkeyPatchNavigableList, { read:  TsMonkeyPatchNavigableList, static: true })
-    private navigableList: TsMonkeyPatchNavigableList;
+    private navigableList: TsMonkeyPatchNavigableList
 
     /**
      *
      *
      */
     @Input()
-    set source(source: T[] | DataProvider) {
+    set source(source: T[] | DataProvider<T>) {
 
         if (source instanceof DataProvider) {
-            this.dataSource = source;
-            return;
+            this.dataSource = source
+            return
         }
 
         this.dataSource = new MemoryDataProvider();
-        (this.dataSource as MemoryDataProvider<T>).source = source;
+        (this.dataSource as MemoryDataProvider<T>).source = source
     }
 
+    /**
+     *
+     *
+     */
     public constructor(
-        private el: ElementRef<HTMLElement>
-    ) {}
+        private el: ElementRef<HTMLElement>,
+        private zone: NgZone
+    ) { }
 
     /**
      * if we move with the arrow keys we have to check current position
      *
      */
     ngAfterViewChecked() {
-        if (this.dataChanged && this.direction !== 0 && !this.isMouseScroll) {
-            this.navigableList.setActiveItem(this.direction < 0 ? 0 : this.displayCount - 1);
-            this.dataChanged = false;
+        const activeItem = this.navigableList.getActiveItemIndex();
+        if (this.dataChanged && !this.isMouseScroll && activeItem > -1) {
+            this.navigableList.setActiveItem(this.direction < 0 ? 0 : this.displayCount - 1)
         }
+        this.dataChanged = false
     }
 
     /**
@@ -118,11 +115,15 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
      * 
      */
     ngOnInit(): void {
-        this.subscription = this.dataSource?.loaded
-            .pipe(tap(() => this.dataChanged = true))
-            .subscribe(this.items);
+        this.registerMouseControls();
+        this.dataSource?.loaded
+            .pipe(
+                tap(() => this.dataChanged = true),
+                takeUntil(this.destroy$)
+            )
+            .subscribe(this.items)
 
-        this.loadItems(0);
+        this.loadItems(0)
     }
 
     /**
@@ -130,8 +131,9 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
      *
      */
     ngOnDestroy() {
-        this.subscription.unsubscribe();
-        this.subscription = null;
+        this.destroy$.next(true)
+        this.destroy$.complete()
+        this.destroy$ = null
     }
 
     /**
@@ -139,7 +141,7 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
      *
      */
     prevItem() {
-        this.loadItems(this.start - 1);
+        this.loadItems(this.start - 1)
     }
 
     /**
@@ -147,7 +149,7 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
      * 
      */
     nextItem() {
-        this.loadItems(this.start + 1);
+        this.loadItems(this.start + 1)
     }
 
     /**
@@ -160,19 +162,23 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
         this.isMouseScroll = false;
 
         const next   = event.params.index;
-        const cancel = next >= this.displayCount || next < 0;
+        const cancel = next > this.displayCount - 1 || next < 0
 
         if (cancel) {
-            this.direction === -1 ? this.prevItem() : this.nextItem();
-            event.cancel();
-            return;
+            this.direction === -1 ? this.prevItem() : this.nextItem()
+            event.cancel()
+            return
         }
 
-        event.next();
+        event.next()
     }
 
+    /**
+     *
+     *
+     */
     setActiveItem(index: number) {
-        this.navigableList.setActiveItem(index);
+        this.navigableList.setActiveItem(index)
     }
 
     /**
@@ -181,41 +187,41 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
      */
     private loadItems(start: number) {
         if (this.dataSource.canLoad(start, this.displayCount)) {
-            this.start = start;
-            this.dataSource.load(this.start, this.displayCount);
+            this.start = Math.max(0, start)
+            this.dataSource.load(this.start, this.displayCount)
         }
     }
 
     /**
-     * listen on mouseove, if true we listen
-     * @outsource this to directive
+     * listen mouse controls, if we hover then we can scroll via mousewheel
+     * until we go out with our mouse. Run all this outside of the ng-zone
+     * so we do not affect change detection all time.
      *
      */
-    @HostListener('mouseover')
-    protected registerMouseControlEvents() {
+    private registerMouseControls() {
 
-        if (!this.isMouserOver) {
+        this.zone.runOutsideAngular(() => {
+            const mouseover$ = fromEvent<MouseEvent>(this.el.nativeElement, 'mouseover')
+            const mouseout$ = fromEvent<MouseEvent>(window, 'mouseout')
+            const mouseWheel$ = fromEvent<WheelEvent>(this.el.nativeElement, 'mousewheel')
 
-            const mouseout$ = fromEvent<MouseEvent>(window, 'mouseout').pipe(
-                filter((event: MouseEvent) => !this.el.nativeElement.contains(event.target as HTMLElement)), 
-                tap(() => this.isMouserOver = false),
-                take(1)
-            );
-
-            fromEvent<WheelEvent>(this.el.nativeElement, 'mousewheel')
-                .pipe(
+            const destroy$ = mouseout$.pipe(
+                filter((event: MouseEvent) => !this.el.nativeElement.contains(event.target as HTMLElement)) 
+            )
+            
+            mouseover$.pipe(
+                switchMap(() => mouseWheel$.pipe(
+                    tap(() => this.isMouseScroll = true),
                     finalize(() => this.isMouseScroll = false),
-                    takeUntil(mouseout$),
-                )
-                .subscribe(($event) => {
-                    $event.stopPropagation();
-                    $event.preventDefault();
-                    $event.deltaY < 0 ? this.prevItem() : this.nextItem();
-
-                    this.isMouseScroll = true;
-                });
-
-            this.isMouserOver = true;
-        }
+                    takeUntil(destroy$))
+                ),
+                takeUntil(this.destroy$)
+            )
+            .subscribe(($event) => {
+                $event.stopPropagation()
+                $event.preventDefault()
+                this.zone.run(() => $event.deltaY < 0 ? this.prevItem() : this.nextItem())
+            })
+        })
     }
 }

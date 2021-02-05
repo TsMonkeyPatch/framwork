@@ -19,7 +19,7 @@ export class AsyncEvent<T = any> {
      * write data to the container
      *
      */
-    public get params(): T {
+    get params(): T {
         return this.data;
     }
 
@@ -27,7 +27,7 @@ export class AsyncEvent<T = any> {
      * emits only one time and complete
      * 
      */
-    public get closed(): Observable<boolean> {
+    get closed(): Observable<boolean> {
         return this.event$.pipe(take(1));
     }
 
@@ -35,15 +35,20 @@ export class AsyncEvent<T = any> {
      * continue
      * 
      */
-    public next() {
-        this.event$.next(true);
+    next() {
+        this.complete(true);
     }
 
     /**
      * cancel event
      * 
      */
-    public cancel() {
-        this.event$.next(false);
+    cancel() {
+        this.complete(false);
+    }
+
+    private complete(value: boolean) {
+        this.event$.next(value);
+        this.event$.complete();
     }
 }

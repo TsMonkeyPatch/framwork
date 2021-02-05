@@ -123,6 +123,10 @@ export class  TsMonkeyPatchNavigableList implements AfterViewInit {
         this.focusKeyManager.activeItem.focus();
     }
 
+    getActiveItemIndex(): number {
+        return this.focusKeyManager.activeItemIndex;
+    }
+
     /**
      * control navigation event before we move
      * 
