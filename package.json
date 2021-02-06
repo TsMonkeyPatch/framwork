@@ -25,7 +25,7 @@
     "@angular/platform-browser": "11.1.2",
     "@angular/platform-browser-dynamic": "11.1.2",
     "@angular/router": "11.1.2",
-    "@tsmonkeypatch/core": "file:dist/core.tar.gz",
+    "@tsmonkeypatch/core": "^0.3.0",
     "bootstrap-scss": "4.6.0",
     "ncp": "^2.0.0",
     "rxjs": "6.6.3",
