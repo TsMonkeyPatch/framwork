@@ -161,7 +161,7 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
         this.direction = event.params.direction;
         this.isMouseScroll = false;
 
-        const next   = event.params.index;
+        const next   = event.params.next;
         const cancel = next > this.displayCount - 1 || next < 0
 
         if (cancel) {

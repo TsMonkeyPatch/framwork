@@ -7,8 +7,7 @@ export enum KEY_CODE {
     ARROW_UP = "ArrowUp"
 }
 
-export interface NavigationData {
-
+export interface NavigationState {
     /**
      * current keycode , arrow down or up 
      *
@@ -19,7 +18,13 @@ export interface NavigationData {
      * item index which is currently active
      *
      */
-    index: number;
+    active: number;
+
+    /**
+     * the index we will move to
+     *
+     */
+    next: number;
 
     /**
      * direction we will move, -1 = up or 1 = down
@@ -28,7 +33,7 @@ export interface NavigationData {
     direction: 1 | -1;
 }
 
-export declare type NavigableListEvent = AsyncEvent<NavigationData>;
+export declare type NavigableListEvent = AsyncEvent<NavigationState>;
 
 /**
  * Directive for a focusable item
@@ -79,7 +84,7 @@ export class  TsMonkeyPatchNavigableList implements AfterViewInit {
      *
      */
     @Output()
-    private navigate: EventEmitter<NavigableListEvent> = new EventEmitter();
+    navigate: EventEmitter<NavigableListEvent> = new EventEmitter();
 
     /**
      * all content children which are focusable
@@ -123,6 +128,10 @@ export class  TsMonkeyPatchNavigableList implements AfterViewInit {
         this.focusKeyManager.activeItem.focus();
     }
 
+    /**
+     * get active item index
+     *
+     */
     getActiveItemIndex(): number {
         return this.focusKeyManager.activeItemIndex;
     }
@@ -140,16 +149,17 @@ export class  TsMonkeyPatchNavigableList implements AfterViewInit {
             $event.stopPropagation();
             $event.preventDefault();
 
-            const keyCode = key === KEY_CODE.ARROW_DOWN ? KEY_CODE.ARROW_DOWN : KEY_CODE.ARROW_UP;
+            const active          = this.focusKeyManager.activeItemIndex; 
             const direction: 1|-1 = key === KEY_CODE.ARROW_DOWN ? 1 : -1;
-            const index = this.focusKeyManager.activeItemIndex + direction;
+            const keyCode         = key === KEY_CODE.ARROW_DOWN ? KEY_CODE.ARROW_DOWN : KEY_CODE.ARROW_UP;
+            const next            = active + direction;
 
             /** create params */
-            const params = { index, key: keyCode, direction };
-            const event  = new AsyncEvent<NavigationData>(params);
+            const params = { active, next, key: keyCode, direction };
+            const event  = new AsyncEvent<NavigationState>(params);
 
             /** listen to container is completed and handle the response */
-            event.closed.subscribe((result) => {
+            event.complete.subscribe((result) => {
                 result ? this.focusKeyManager.onKeydown($event) : void 0;
             });
 

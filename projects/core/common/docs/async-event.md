@@ -52,7 +52,7 @@ export class FrameworkSelector {
         const event  = new AsyncEvent<Framework>(framework);
 
         /** listen to container is completed and handle the response */
-        event.closed.subscribe((result: boolean) => {
+        event.complete.subscribe((result: boolean) => {
             if (result) {
                 this.saveFramework(framework);
             }
@@ -68,7 +68,7 @@ export class FrameworkSelector {
 }
 ```
 
-@somecomponent.ts
+@project.ts
 
 ```ts
 import { Component, EventEmitter } from '@angular/core';
@@ -99,7 +99,7 @@ export class ProjectComponent {
 }
 ```
 
-@somecomponent.html
+@project.html
 
 ```html
 <app-framework-selector (selectFramework)="onSelectFramework($event)">

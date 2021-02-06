@@ -27,7 +27,7 @@ export class AsyncEvent<T = any> {
      * emits only one time and complete
      * 
      */
-    get closed(): Observable<boolean> {
+    get complete(): Observable<boolean> {
         return this.event$.pipe(take(1));
     }
 
@@ -36,7 +36,7 @@ export class AsyncEvent<T = any> {
      * 
      */
     next() {
-        this.complete(true);
+        this.finalize(true);
     }
 
     /**
@@ -44,10 +44,10 @@ export class AsyncEvent<T = any> {
      * 
      */
     cancel() {
-        this.complete(false);
+        this.finalize(false);
     }
 
-    private complete(value: boolean) {
+    private finalize(value: boolean) {
         this.event$.next(value);
         this.event$.complete();
     }
