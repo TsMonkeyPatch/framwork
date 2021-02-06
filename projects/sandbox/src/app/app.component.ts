@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ScrollPosition } from '@lib/core/common';
 import { WindowScrollProvider } from '@tsmonkeypatch/core/common';
 import { PaginationController } from '@tsmonkeypatch/core/pagination';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
 
   scrollToPageEnd() {
     this.windowScrollProvider.scroll()
-      .subscribe((position) => console.log(
+      .subscribe((position: ScrollPosition) => console.log(
         "scrolled to x: %i y: %i", position.top, position.left
       ))
   }

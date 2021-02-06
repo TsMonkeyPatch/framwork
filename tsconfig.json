@@ -28,7 +28,7 @@
         "dist/forms/forms",
         "dist/forms"
       ],
-      "@core/*": [
+      "@lib/core/*": [
         "./projects/core/*"
       ] 
     }

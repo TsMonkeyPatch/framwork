@@ -7,14 +7,7 @@ export enum KEY_CODE {
     ARROW_UP = "ArrowUp"
 }
 
-export interface NavigableListBeforeNextEvent {
-
-    /**
-     * event container to get the result of the event
-     *
-     */
-    event: AsyncEvent;
-
+export interface NavigationState {
     /**
      * current keycode , arrow down or up 
      *
@@ -25,8 +18,22 @@ export interface NavigableListBeforeNextEvent {
      * item index which is currently active
      *
      */
-    index: number;
+    active: number;
+
+    /**
+     * the index we will move to
+     *
+     */
+    next: number;
+
+    /**
+     * direction we will move, -1 = up or 1 = down
+     *
+     */
+    direction: 1 | -1;
 }
+
+export declare type NavigableListEvent = AsyncEvent<NavigationState>;
 
 /**
  * Directive for a focusable item
@@ -77,7 +84,7 @@ export class  TsMonkeyPatchNavigableList implements AfterViewInit {
      *
      */
     @Output()
-    private beforeNextItem: EventEmitter<NavigableListBeforeNextEvent> = new EventEmitter();
+    navigate: EventEmitter<NavigableListEvent> = new EventEmitter();
 
     /**
      * all content children which are focusable
@@ -107,7 +114,7 @@ export class  TsMonkeyPatchNavigableList implements AfterViewInit {
      */
     @HostListener('keydown', ['$event'])
     onKeydown($event: KeyboardEvent) {
-        this.beforeNextItem.observers.length && this.focusKeyManager.activeItem
+        this.navigate.observers.length && this.focusKeyManager.activeItem
             ? this.beforeNext($event)
             : this.focusKeyManager.onKeydown($event);
     }
@@ -122,7 +129,15 @@ export class  TsMonkeyPatchNavigableList implements AfterViewInit {
     }
 
     /**
-     * handle before next
+     * get active item index
+     *
+     */
+    getActiveItemIndex(): number {
+        return this.focusKeyManager.activeItemIndex;
+    }
+
+    /**
+     * control navigation event before we move
      * 
      */
     private async beforeNext($event: KeyboardEvent) {
@@ -134,16 +149,22 @@ export class  TsMonkeyPatchNavigableList implements AfterViewInit {
             $event.stopPropagation();
             $event.preventDefault();
 
-            const event     = new AsyncEvent();
-            const keyCode   = key === KEY_CODE.ARROW_DOWN ? KEY_CODE.ARROW_DOWN : KEY_CODE.ARROW_UP;
-            const direction = key === KEY_CODE.ARROW_DOWN ? 1 : -1;
-            const index     = this.focusKeyManager.activeItemIndex + direction;
+            const active          = this.focusKeyManager.activeItemIndex; 
+            const direction: 1|-1 = key === KEY_CODE.ARROW_DOWN ? 1 : -1;
+            const keyCode         = key === KEY_CODE.ARROW_DOWN ? KEY_CODE.ARROW_DOWN : KEY_CODE.ARROW_UP;
+            const next            = active + direction;
 
-            event.completed.subscribe((result) => {
+            /** create params */
+            const params = { active, next, key: keyCode, direction };
+            const event  = new AsyncEvent<NavigationState>(params);
+
+            /** listen to container is completed and handle the response */
+            event.complete.subscribe((result) => {
                 result ? this.focusKeyManager.onKeydown($event) : void 0;
             });
 
-            this.beforeNextItem.emit({ event, key: keyCode, index });
+            /** emit container through event emitter */
+            this.navigate.emit(event);
         }
     }
 }

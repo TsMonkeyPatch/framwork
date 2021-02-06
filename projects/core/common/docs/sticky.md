@@ -1,4 +1,4 @@
-# StickyDirective 
+# @tsmonkeypatch/core/common.StickyDirective 
 Simple directive the html element stays on top if we scrolled down.
 
 ## Usage
