@@ -1,7 +1,7 @@
 {
   "name": "@tsmonkeypatch/core",
   "description": "Angular Library with several modules created as part of the YouTube project (https://www.youtube.com/results?search_query=TsMonkeyPatch) which is constantly growing. Each module can be imported and used separately.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/TsMonkeyPatch/framwork/tree/development/projects/core"
@@ -11,10 +11,10 @@
     "email": "tsmonkeypatch@gmail.com",
     "name": "Ralf Hannuschka"
   },
-  "keywords": ["angular", "pagination", "overlay", "dropdown", "window scroll", "monitor", "library", "sticky", "navigable list"],
+  "keywords": ["angular", "pagination", "overlay", "dropdown", "window scroll", "monitor", "library", "sticky", "navigable list", "datalist"],
   "peerDependencies": {
-    "@angular/common": "11.0.6",
-    "@angular/core": "11.0.6"
+    "@angular/common": "^11.0.0",
+    "@angular/core": "^11.0.0"
   },
   "dependencies": {
     "tslib": "2.0.0"

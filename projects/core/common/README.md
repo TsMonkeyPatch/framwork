@@ -16,5 +16,5 @@ Centralized service to monitor window scroll events. Currently this one only foc
 
 ## Utils
 
-- [AsyncEvent](https://github.com/TsMonkeyPatch/framwork/tree/master/projects/core/common/docs/asnyc-event.md)
+- [AsyncEvent](https://github.com/TsMonkeyPatch/framwork/blob/master/projects/core/common/docs/async-event.md)
 Event Container which accepts parameters and will passed through an EventEmitter.
