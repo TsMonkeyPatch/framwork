@@ -1,9 +1,9 @@
-import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { fromEvent, ReplaySubject, Subject } from 'rxjs';
-import { filter, finalize, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { NavigableListEvent, TsMonkeyPatchNavigableList } from '@tsmonkeypatch/core/common';
-import { DataProvider } from '../utils/data.provider';
-import { MemoryDataProvider } from '../utils/memory';
+import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild } from '@angular/core'
+import { fromEvent, ReplaySubject, Subject } from 'rxjs'
+import { filter, finalize, switchMap, takeUntil, tap } from 'rxjs/operators'
+import { NavigableListEvent, TsMonkeyPatchNavigableList } from '@tsmonkeypatch/core/common'
+import { DataProvider } from '../utils/data.provider'
+import { MemoryDataProvider } from '../utils/memory'
 
 @Component({
     selector: 'tsmp-datalist',
@@ -21,11 +21,18 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
     items: ReplaySubject<T[]> = new ReplaySubject()
 
     /**
+     *
+     *
+     */
+    @Output()
+    select: EventEmitter<T> = new EventEmitter()
+
+    /**
      * max display count of items
      *
      */
     @Input()
-    displayCount = 10
+    displayCount: number
 
     /**
      * flage data has been changed so we could update the current state 
@@ -39,12 +46,6 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
      * 
      */
     private dataSource: DataProvider
-
-    /**
-     * start index
-     *
-     */
-    private start = 0
 
     /**
      *
@@ -92,7 +93,7 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
      *
      *
      */
-    public constructor(
+    constructor(
         private el: ElementRef<HTMLElement>,
         private zone: NgZone
     ) { }
@@ -104,7 +105,7 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
     ngAfterViewChecked() {
         const activeItem = this.navigableList.getActiveItemIndex();
         if (this.dataChanged && !this.isMouseScroll && activeItem > -1) {
-            this.navigableList.setActiveItem(this.direction < 0 ? 0 : this.displayCount - 1)
+            this.navigableList.setActiveItem(this.direction < 0 ? 0 : this.dataSource.count - 1)
         }
         this.dataChanged = false
     }
@@ -116,14 +117,15 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
      */
     ngOnInit(): void {
         this.registerMouseControls();
-        this.dataSource?.loaded
-            .pipe(
-                tap(() => this.dataChanged = true),
-                takeUntil(this.destroy$)
-            )
-            .subscribe(this.items)
 
-        this.loadItems(0)
+        this.dataSource?.loaded.pipe(
+            tap(() => this.dataChanged = true),
+            takeUntil(this.destroy$)
+        )
+        .subscribe(this.items)
+
+        this.dataSource.count = this.displayCount ?? this.dataSource.count
+        this.dataSource.load(0)
     }
 
     /**
@@ -137,19 +139,19 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
     }
 
     /**
-     * go up for 1 item 
-     *
-     */
-    prevItem() {
-        this.loadItems(this.start - 1)
-    }
-
-    /**
      * go down for 1 item
      * 
      */
     nextItem() {
-        this.loadItems(this.start + 1)
+        this.dataSource.load(this.dataSource.current + 1)
+    }
+
+    /**
+     * go up for 1 item 
+     *
+     */
+    prevItem() {
+        this.dataSource.load(this.dataSource.current - 1)
     }
 
     /**
@@ -157,39 +159,31 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
      * 
      */
     onNavigate(event: NavigableListEvent) {
+        this.direction = event.params.direction
+        this.isMouseScroll = false
 
-        this.direction = event.params.direction;
-        this.isMouseScroll = false;
-
-        const next   = event.params.next;
-        const cancel = next > this.displayCount - 1 || next < 0
+        const next   = event.params.next
+        const cancel = next > this.dataSource.count - 1 || next < 0
 
         if (cancel) {
             this.direction === -1 ? this.prevItem() : this.nextItem()
             event.cancel()
             return
         }
-
         event.next()
     }
 
-    /**
-     *
-     *
-     */
-    setActiveItem(index: number) {
-        this.navigableList.setActiveItem(index)
+    selectItem(item: T) {
+        this.select.emit(item)
     }
 
     /**
-     * load next data
+     *
      *
      */
-    private loadItems(start: number) {
-        if (this.dataSource.canLoad(start, this.displayCount)) {
-            this.start = Math.max(0, start)
-            this.dataSource.load(this.start, this.displayCount)
-        }
+    setActiveItem(index: number, item: T) {
+        this.navigableList.setActiveItem(index)
+        this.selectItem(item)
     }
 
     /**

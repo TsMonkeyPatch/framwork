@@ -1,0 +1,8 @@
+<tsmp-pagination [template]="pagination"></tsmp-pagination>
+
+<ng-template #pagination let-state="state" let-items="items">
+    <ul>
+        <li><app-pagination--page-selector></app-pagination--page-selector></li>
+        <li *ngFor="let item of items" (click)="!item.clickable || selectPage(item.value)">{{item.value}}</li>
+    </ul>
+</ng-template>

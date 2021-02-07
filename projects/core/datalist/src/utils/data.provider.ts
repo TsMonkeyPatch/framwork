@@ -1,15 +1,59 @@
 import { Observable, ReplaySubject } from "rxjs";
 import { switchMap } from "rxjs/operators";
 
+export interface DataSourceSetting {
+    start: number;
+    count: number;
+}
+
 export abstract class DataProvider<T = any> {
 
-    abstract canLoad(start: number, count: number): boolean;
+    /**
+     * total amount of items
+     *
+     */
+    total = -1
+
+    /**
+     * prevalidate data can loaded
+     *
+     */
+    protected abstract canLoad(start: number, count: number): boolean
 
     /**
      * loads the data from repository / memory
      *
      */
-    protected abstract fetch(start: number, count: number): Observable<T[]>;
+    protected abstract fetch(start: number, count: number): Observable<T[]>
+
+    /**
+     *
+     *
+     */
+    private load$: ReplaySubject<{from: number, to: number}> = new ReplaySubject(1)
+
+    /** 
+     *
+     *
+     */
+    private data$: Observable<any>;
+
+    /**
+     * start index where we start loading
+     *
+     *
+     */
+    public get current(): number {
+        return this.loadedIndex;
+    }
+
+    /**
+     * count of items which should be loaded
+     *
+     */
+    private _count = 10
+
+    private loadedIndex = 0;
 
     /**
      *
@@ -18,22 +62,44 @@ export abstract class DataProvider<T = any> {
     get loaded(): Observable<T[]> {
         if (!this.data$) {
             this.data$ = this.load$.pipe(
-                switchMap(({start, count}) => this.fetch(start, count)),
+                switchMap(({from, to}) => this.fetch(from, to)),
             );
         }
         return this.data$;
     }
 
-    private load$: ReplaySubject<{start: number, count: number}> = new ReplaySubject(1);
+    /**
+     * set amount of items which should be loaded
+     *
+     */
+    set count(count: number) {
+        this._count = count
+    }
 
-    private data$: Observable<any>;
+    /**
+     * get amount of items which should be loaded
+     *
+     */
+    get count(): number {
+        return this._count
+    }
 
     /**
      * load data
      *
      */
-    load(start: number, count: number): void {
-        start = start < 0 ? 0 : start;
-        this.load$.next({start, count});
+    load(start: number): boolean {
+
+        let from = this.total < 0 ? start :  Math.min(this.total - this.count, start) 
+            from = Math.max(0, from)
+
+        const to = this.count
+
+        if (this.canLoad(from, to)) {
+            this.loadedIndex = from;
+            this.load$.next({from, to})
+            return true
+        }
+        return false;
     }
 }

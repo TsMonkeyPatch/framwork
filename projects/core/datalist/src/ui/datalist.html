@@ -1,5 +1,5 @@
 <ul tsmpNavigableList (navigate)="onNavigate($event)" >
-    <li *ngFor="let item of items | async; let i = index" tsmpNavigableListItem (click)="setActiveItem(i)">
+    <li *ngFor="let item of items | async; let i = index" tsmpNavigableListItem (keydown.enter)="selectItem(item)" (click)="setActiveItem(i, item)">
         {{item}}
     </li>
 </ul>

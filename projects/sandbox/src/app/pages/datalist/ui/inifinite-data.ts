@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { InfiniteDataSource } from './infinite-data.source';
+import { InfiniteDataSource } from '../utils/infinite-data.source';
 
 @Component({
     selector: 'app-infinita-data',
@@ -11,5 +11,9 @@ export class InfiniteDataComponent implements OnInit {
 
     ngOnInit(): void {
         this.dataSource = new InfiniteDataSource();
+    }
+
+    onItemSelect(item: number) {
+        console.log(item);
     }
 }

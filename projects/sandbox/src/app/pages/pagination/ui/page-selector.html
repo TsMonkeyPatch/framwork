@@ -1,0 +1,5 @@
+    <button type="btn" [tsMonkeyPatchOverlay]="pageselector">{{active}}</button>
+
+    <tsmp-overlay #pageselector>
+        <tsmp-datalist [source]="dataSource" (select)="selectPage($event)"></tsmp-datalist>
+    </tsmp-overlay>
