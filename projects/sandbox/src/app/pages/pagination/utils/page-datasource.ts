@@ -5,7 +5,7 @@ export class PageDataSource extends DataProvider<number> {
 
     constructor() {
         super();
-        this.count = 5;
+        this.count = 5
     }
 
     /**
@@ -13,7 +13,7 @@ export class PageDataSource extends DataProvider<number> {
      *
      */
     canLoad(start: number, count: number): boolean {
-        return start > -1 && start + count <= this.total;
+        return start > -1 && start + count <= this.total
     }
 
     /**
@@ -21,7 +21,7 @@ export class PageDataSource extends DataProvider<number> {
      *
      */
     updateTotal(total: number) {
-        this.total = total;
+        this.total = total
     }
 
     /**
@@ -33,8 +33,8 @@ export class PageDataSource extends DataProvider<number> {
         const max = start + count;
 
         for(let i = start, j = 0; i < max; i++, j++) {
-            data[j] = i + 1;
+            data[j] = i + 1
         }
-        return of(data);
+        return of(data)
     }
 }

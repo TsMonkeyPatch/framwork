@@ -1,13 +1,14 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core'
-import { TsMonkeyPatchOverlayControl } from '@tsmonkeypatch/core/overlay'
+import { AfterViewInit, Component, Host, OnDestroy, OnInit } from '@angular/core'
+import { TsMonkeyPatchOverlay } from '@tsmonkeypatch/core/overlay'
 import { PaginationController } from '@tsmonkeypatch/core/pagination'
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import { PageDataSource } from '../utils/page-datasource'
 
 @Component({
-    selector: 'app-pagination--page-selector',
+    selector: 'pagination--page-selector',
     templateUrl: './page-selector.html',
+    styleUrls: ['./page-selector.scss']
 })
 export class PageSelector implements AfterViewInit, OnInit, OnDestroy {
 
@@ -15,19 +16,11 @@ export class PageSelector implements AfterViewInit, OnInit, OnDestroy {
 
     active = 1
 
-    total = 0
-
     private destroy$: Subject<boolean>
 
-    /**
-     * overlay control
-     *
-     */
-    @ViewChild(TsMonkeyPatchOverlayControl, {read: TsMonkeyPatchOverlayControl})
-    private overlayCtrl: TsMonkeyPatchOverlayControl
-
     constructor(
-        private paginationController: PaginationController
+        private paginationController: PaginationController,
+        @Host() private overlay: TsMonkeyPatchOverlay
     ) {
         this.destroy$ = new Subject()
         this.dataSource = new PageDataSource()
@@ -57,13 +50,11 @@ export class PageSelector implements AfterViewInit, OnInit, OnDestroy {
      *
      */
     ngAfterViewInit(): void {
-        this.overlayCtrl.viewStateChange
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((state: number) => {
-                if (state) {
-                    this.dataSource.load(this.active - 3)
-                }
-            });
+        this.paginationController.change
+            .subscribe((data) => {
+                this.dataSource.total = data.state.total
+                this.dataSource.load(data.state.active - 3)
+            })
     }
 
     /**
@@ -71,8 +62,8 @@ export class PageSelector implements AfterViewInit, OnInit, OnDestroy {
      *
      */
     selectPage(page: number) {
-        this.overlayCtrl.closeOverlay();
         this.paginationController.goTo(page)
+        this.overlay.closeOverlay()
     }
 
     /**

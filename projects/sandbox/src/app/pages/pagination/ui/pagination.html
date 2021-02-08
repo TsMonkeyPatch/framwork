@@ -1,8 +1,13 @@
-<tsmp-pagination [template]="pagination"></tsmp-pagination>
+<div class="container">
+    <div class="row">
+        <div class="col d-flex flex-row align-items-baseline">
 
-<ng-template #pagination let-state="state" let-items="items">
-    <ul>
-        <li><app-pagination--page-selector></app-pagination--page-selector></li>
-        <li *ngFor="let item of items" (click)="!item.clickable || selectPage(item.value)">{{item.value}}</li>
-    </ul>
-</ng-template>
+            <button type="button" class="btn btn-outline-primary btn-sm" [tsMonkeyPatchOverlay]="pageselector" [position]="position">click</button>
+            <tsmp-overlay #pageselector>
+                <pagination--page-selector></pagination--page-selector>
+            </tsmp-overlay>
+
+            <tsmp-pagination></tsmp-pagination>
+        </div>
+    </div>
+</div>

@@ -6,6 +6,7 @@ import { TsMonkeyPatchPaginationModule } from '@tsmonkeypatch/core/pagination';
 import { PaginationPageRoutingModule } from './pagination-routing.module';
 import { PaginationPage } from './ui/pagination';
 import { PageSelector } from './ui/page-selector';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     declarations: [
@@ -14,6 +15,7 @@ import { PageSelector } from './ui/page-selector';
     ],
     imports: [
         CommonModule,
+        FormsModule,
         PaginationPageRoutingModule,
         TsMonkeyPatchDatalistModule,
         TsMonkeyPatchOverlayModule,

@@ -15,6 +15,6 @@ import { PaginationPage } from './ui/pagination';
     exports: [
         RouterModule
     ],
-    providers: [],
+    providers: []
 })
 export class PaginationPageRoutingModule {}
