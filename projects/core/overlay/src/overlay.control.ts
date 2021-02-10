@@ -1,18 +1,20 @@
-import { AfterViewInit, Directive, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, Renderer2, ViewContainerRef } from '@angular/core';
-import { ConnectedPosition, Overlay, OverlayRef, PositionStrategy } from '@angular/cdk/overlay';
-import { TsMonkeyPatchOverlay } from './overlay';
+import { Directive, ElementRef, EventEmitter, Host, HostListener, Inject, Input, OnDestroy, OnInit, Optional, Output, Renderer2, ViewContainerRef } from '@angular/core';
+import { ConnectionPositionPair, Overlay, OverlayRef, PositionStrategy } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { fromEvent, Subscription } from 'rxjs';
+import { fromEvent, Subject } from 'rxjs';
+import { TsMonkeyPatchOverlay } from './overlay';
+import { takeUntil } from 'rxjs/operators';
+import { PositionFactory } from './position.factory';
 
 export enum OverlayViewState {
-    HIDDEN = 0,
-    VISIBLE = 1
-};
+    HIDDEN,
+    VISIBLE
+}
 
 @Directive({
-    selector: '[tsMonkeyPatchOverlay]',
+    selector: '[tsMonkeyPatchOverlay]'
 })
-export class TsMonkeyPatchOverlayControl implements OnDestroy, AfterViewInit {
+export class TsMonkeyPatchOverlayControl implements OnInit, OnDestroy {
 
     @Input()
     public tsMonkeyPatchOverlay: TsMonkeyPatchOverlay = null;
@@ -26,6 +28,9 @@ export class TsMonkeyPatchOverlayControl implements OnDestroy, AfterViewInit {
      */
     @Input()
     public widthStrategy: 'host' | 'none' = 'none';
+
+    @Input()
+    public position: ConnectionPositionPair[];
 
     @Output()
     public viewStateChange: EventEmitter<OverlayViewState> = new EventEmitter();
@@ -42,24 +47,19 @@ export class TsMonkeyPatchOverlayControl implements OnDestroy, AfterViewInit {
      */
     private viewState = OverlayViewState.HIDDEN;
 
-    private isTriggerDisabled = false;
-
-    private triggerSubscription?: Subscription;
+    /**
+     *
+     *
+     */
+    private destroy$: Subject<boolean> = new Subject();
 
     public constructor(
         private el: ElementRef<HTMLElement>,
         private overlay: Overlay,
         private renderer: Renderer2,
-        private viewRef: ViewContainerRef
+        private viewRef: ViewContainerRef,
+        @Host() @Optional() @Inject('trigger') private hasTrigger: boolean
     ) {}
-
-    /**
-     * disable default trigger
-     *
-     */
-    disableTrigger() {
-        this.isTriggerDisabled = true;
-    }
 
     /**
      * toggle between viewstate visible, hidden
@@ -90,24 +90,21 @@ export class TsMonkeyPatchOverlayControl implements OnDestroy, AfterViewInit {
         }
     }
 
+    ngOnInit() {
+        if (!this.hasTrigger) {
+            fromEvent(this.el.nativeElement, 'click')
+                .pipe(takeUntil(this.destroy$))
+                .subscribe(() => this.toggleOverlay());
+        }
+    }
+
     ngOnDestroy(): void {
         this.overlayRef.detach();
         this.overlayRef = null;
 
-        this.triggerSubscription?.unsubscribe();
-    }
-
-    /**
-     *
-     * 
-     */
-    ngAfterViewInit(): void {
-        if (this.isTriggerDisabled) {
-            return;
-        }
-
-        this.triggerSubscription = fromEvent(this.el.nativeElement, 'click')
-            .subscribe(() => this.toggleOverlay());
+        this.destroy$.next(true);
+        this.destroy$.complete();
+        this.destroy$ = null;
     }
     
     /**
@@ -125,8 +122,9 @@ export class TsMonkeyPatchOverlayControl implements OnDestroy, AfterViewInit {
         }
 
         const portal = new TemplatePortal(this.tsMonkeyPatchOverlay.template, this.viewRef);
-        this.overlayRef.attach(portal);
 
+        this.tsMonkeyPatchOverlay.control = this;
+        this.overlayRef.attach(portal);
         this.viewState = OverlayViewState.VISIBLE;
         this.viewStateChange.emit(this.viewState);
     }
@@ -170,16 +168,9 @@ export class TsMonkeyPatchOverlayControl implements OnDestroy, AfterViewInit {
      */
     private resolveOverlayPosition(): PositionStrategy {
 
-        const position: ConnectedPosition = {
-            originX: 'start',
-            originY: 'bottom',
-            overlayX: 'start',
-            overlayY: 'top'
-        }
-
         return this.overlay.position()
             .flexibleConnectedTo(this.el.nativeElement)
-            .withPositions([position])
+            .withPositions(this.position ?? PositionFactory.verticalPositionPair())
             .withFlexibleDimensions(false)
             .withPush(false);
     }

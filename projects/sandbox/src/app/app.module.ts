@@ -8,14 +8,10 @@ import { TsMonkeyPatchDatalistModule } from '@tsmonkeypatch/core/datalist';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DataPage } from './components/datapage';
-import { InfiniteDataComponent } from './components/inifinite-data';
 
 @NgModule({
   declarations: [
     AppComponent,
-    InfiniteDataComponent,
-    DataPage
   ],
   imports: [
     AppRoutingModule,

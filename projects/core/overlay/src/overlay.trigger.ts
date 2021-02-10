@@ -1,11 +1,12 @@
 import { ElementRef, Host, OnDestroy, OnInit } from '@angular/core';
 import { Directive, Input } from '@angular/core';
+import { TsMonkeyPatchOverlayControl } from './overlay.control';
 import { fromEvent, Subscription } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import { TsMonkeyPatchOverlayControl } from './overlay.control';
 
 @Directive({
-    selector: '[tsMonkeyPatchOverlayTrigger]'
+    selector: '[tsMonkeyPatchOverlayTrigger]',
+    providers: [{ provide: 'trigger', useValue: true}]
 })
 export class TsMonkeyPatchOverlayTrigger implements OnDestroy, OnInit {
 
@@ -24,8 +25,6 @@ export class TsMonkeyPatchOverlayTrigger implements OnDestroy, OnInit {
      *
      */
     ngOnInit() {
-        this.overlayCtrl.disableTrigger();
-
         switch (this.tsMonkeyPatchOverlayTrigger) {
             case 'focus':
                 this.registerFocusListener();

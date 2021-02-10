@@ -32,12 +32,12 @@
     "zone.js": "0.11.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "0.1101.3",
-    "@angular/cli": "11.1.3",
+    "@angular-devkit/build-angular": "0.1101.4",
+    "@angular/cli": "11.1.4",
     "@angular/compiler-cli": "11.1.2",
-    "@tsmonkeypatch/core": "^0.3.1",
+    "@tsmonkeypatch/core": "file:dist/core.tar.gz",
     "@types/node": "14.14.25",
     "ng-packagr": "11.1.4",
-    "typescript": "4.0.5"
+    "typescript": "4.1.4"
   }
 }

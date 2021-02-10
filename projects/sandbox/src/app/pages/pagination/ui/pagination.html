@@ -1,0 +1,13 @@
+<div class="container">
+    <div class="row">
+        <div class="col d-flex flex-row align-items-baseline">
+
+            <button type="button" class="btn btn-outline-primary btn-sm" [tsMonkeyPatchOverlay]="pageselector" [position]="position">click</button>
+            <tsmp-overlay #pageselector>
+                <pagination--page-selector></pagination--page-selector>
+            </tsmp-overlay>
+
+            <tsmp-pagination></tsmp-pagination>
+        </div>
+    </div>
+</div>
