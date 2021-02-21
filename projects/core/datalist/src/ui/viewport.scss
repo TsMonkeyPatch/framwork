@@ -1,0 +1,22 @@
+:host {
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+
+    .tsmp-viewport {
+        display: block;
+        height: 220px;
+        overflow-y: auto;
+        position: relative;
+        border: 1px solid
+    }
+
+    .tsmp-content-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        contain: content;
+    }
+}
