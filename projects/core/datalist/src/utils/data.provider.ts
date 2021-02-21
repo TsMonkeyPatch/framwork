@@ -88,7 +88,7 @@ export abstract class DataProvider<T = any> {
      * load data
      *
      */
-    load(start: number): boolean {
+    load(start: number, count?: number): boolean {
 
         let from = this.total < 0 ? start :  Math.min(this.total - this.count, start) 
             from = Math.max(0, from)

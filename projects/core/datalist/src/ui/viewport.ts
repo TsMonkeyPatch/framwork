@@ -177,7 +177,7 @@ export class TsMonkeyPatchVirtualViewport implements AfterViewChecked, AfterView
                 this.zone.run(() => this.cdRef.markForCheck())
             })
     }
-
+ 
     /**
      * get range to render next
      *
