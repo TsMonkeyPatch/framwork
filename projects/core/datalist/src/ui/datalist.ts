@@ -35,6 +35,13 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
     displayCount: number
 
     /**
+     * max display count of items
+     *
+     */
+    @Input()
+    disableScroll = false
+
+    /**
      * flage data has been changed so we could update the current state 
      * of navigable list item
      *
@@ -116,7 +123,10 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
      * 
      */
     ngOnInit(): void {
-        this.registerMouseControls();
+
+        if (!this.disableScroll) {
+            this.registerMouseControls();
+        }
 
         this.dataSource?.loaded.pipe(
             tap(() => this.dataChanged = true),

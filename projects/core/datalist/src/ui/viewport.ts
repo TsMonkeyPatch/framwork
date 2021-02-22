@@ -2,9 +2,21 @@
  * base on @see https://blog.logrocket.com/virtual-scrolling-core-principles-and-basic-implementation-in-react/
  *
  */
-import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, NgZone, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { 
+    AfterViewChecked,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Input,
+    NgZone,
+    OnInit,
+    Renderer2,
+    ViewChild
+} from '@angular/core';
 import { animationFrameScheduler, fromEvent } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import { DataProvider } from '../utils/data.provider';
 
 @Component({
@@ -31,6 +43,19 @@ export class TsMonkeyPatchVirtualViewport implements AfterViewChecked, AfterView
         if (count !== this.itemsTotal) {
             this.itemsTotal = count
         }
+
+        /**
+         * @todo recalculate and scroll to top
+         *
+         */
+    }
+
+    /**
+     * number of items in total
+     *
+     */
+    get total(): number {
+        return this.itemsTotal
     }
 
     /**
@@ -51,7 +76,7 @@ export class TsMonkeyPatchVirtualViewport implements AfterViewChecked, AfterView
      * tolerance on bottom and top
      *
      */
-    private tolerance = 2
+    private tolerance = 4
 
     /**
      * current range we have loaded
@@ -65,29 +90,20 @@ export class TsMonkeyPatchVirtualViewport implements AfterViewChecked, AfterView
      */
     private rangeNeedsUpdate = false
 
-    get total(): number {
-        return this.itemsTotal
-    }
-
     /**
      * max amount of items we expect
      *
      */
-    private itemsTotal = 1000 * 10 * 10
+    private itemsTotal = 1000 * 1000 * 100
 
     /**
-     * set the max size to 6 Million pixel to avoid rendering issues (even with scrollbars)
-     * if itemsTotal * itemSize > 6 Million we have to scale this down
-     * if we come bigger then we have to convert down to maximum of 6 Million
+     * set the max height of the document to 1million px, by default chrome seems to handle a max height
+     * of 33.5 Million Pixel but it seems even on less pixel (tested with 6 million) we got some scrolling issues like a 
+     * rubber band
      * 
-     * @see https://stackoverflow.com/questions/10882769/do-the-browsers-have-a-maximum-height-for-the-body-document
-     * 
-     * Chrome / Edge: cuts on 33.5 Million
-     * Firefox: 6,000,000
-     * 
-     * other browser never tested
+     * so set max_size of document to 750k pixels this seems to be good
      */
-    private static MAX_SIZE = 6 * 1000 * 1000 * 1000
+    private static MAX_SIZE = 1000 * 750
 
     /**
      * viewport which has the content
@@ -131,14 +147,14 @@ export class TsMonkeyPatchVirtualViewport implements AfterViewChecked, AfterView
      *
      */
     ngAfterViewInit(): void {
-        /**
-         * set height of virtual padding element
-         *
-         */
         const totalHeight = Math.min(this.itemsTotal * this.itemHeight, TsMonkeyPatchVirtualViewport.MAX_SIZE)
         this.renderer.setStyle(this.virtualSpace.nativeElement, `height`, `${totalHeight}px`)
     }
 
+    /**
+     * view has been checked, update css property transform: translateY if required
+     *
+     */
     ngAfterViewChecked(): void {
 
         if (this.rangeNeedsUpdate) {
@@ -169,7 +185,6 @@ export class TsMonkeyPatchVirtualViewport implements AfterViewChecked, AfterView
                 distinctUntilChanged((x, y) => x[0] === y[0] && x[1] === y[1])
             )
             .subscribe((range) => {
-                this.range = range
                 this.source.load(range[0], range[1] - range[0])
                 this.rangeNeedsUpdate = true
 
@@ -182,10 +197,30 @@ export class TsMonkeyPatchVirtualViewport implements AfterViewChecked, AfterView
      *
      */
     private getRange(): [number, number] {
-        const top  = this.viewport.nativeElement.scrollTop
+        let top  = this.viewport.nativeElement.scrollTop
         const toleranceHeight = this.tolerance * this.itemHeight
-        const start = Math.max(Math.floor((top - toleranceHeight) / this.itemHeight), 0)
-        const end   = Math.min(start + this.tolerance * 2 + 6, this.total)
+
+        let start = Math.max(Math.floor((top - toleranceHeight) / this.itemHeight), 0)
+        let end   = Math.min(start + this.tolerance * 2 + 6, this.total)
+
+        this.range = [start, end]
+
+        /**
+         * the original high is greater then MAX_SIZE, so convert the data
+         * 
+         */
+        const virtualHeight = this.itemsTotal * this.itemHeight
+        if (virtualHeight > TsMonkeyPatchVirtualViewport.MAX_SIZE) {
+
+            const viewportHeight = this.viewport.nativeElement.clientHeight
+            const offsetMax = TsMonkeyPatchVirtualViewport.MAX_SIZE - viewportHeight
+            const offsetScrolled = Math.min(top, offsetMax);
+            const virtualOffsetMax = virtualHeight - viewportHeight
+            const virtualOffsetScrolled = offsetScrolled * virtualOffsetMax / offsetMax
+
+            start = Math.max(Math.floor((virtualOffsetScrolled - toleranceHeight) / this.itemHeight), 0)
+            end   = Math.min(start + this.tolerance * 2 + 6, this.total)
+        }
 
         return [start, end]
     }

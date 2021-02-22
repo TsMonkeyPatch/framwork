@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ScrollPosition } from '@lib/core/common';
+import { DataProvider } from '@lib/core/datalist/public-api';
 import { WindowScrollProvider } from '@tsmonkeypatch/core/common';
 import { PaginationController } from '@tsmonkeypatch/core/pagination';
+import { DataSource } from './utils/datasource';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +15,8 @@ export class AppComponent implements OnInit {
   title = 'sandbox';
 
   public data: number[] = Array.from(Array(40)).map((value ,index) => index);
+
+  datasource: DataProvider<any> = new DataSource
 
   public constructor(
     private windowScrollProvider: WindowScrollProvider,

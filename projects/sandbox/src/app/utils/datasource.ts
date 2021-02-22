@@ -9,8 +9,6 @@ export class DataSource extends DataProvider<string> {
 
     protected fetch(start: number, count: number): Observable<string[]> {
 
-        console.log(start, count);
-
         const data = Array.from(Array(count)).map((_, index) => `item #` + (start + index))
         return of(data)
     }
