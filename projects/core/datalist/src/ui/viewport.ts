@@ -82,11 +82,10 @@ export class TsMonkeyPatchVirtualViewport implements AfterViewChecked, AfterView
      * 
      * @see https://stackoverflow.com/questions/10882769/do-the-browsers-have-a-maximum-height-for-the-body-document
      * 
-     * Chrome: 512,000,000
+     * Chrome / Edge: cuts on 33.5 Million
      * Firefox: 6,000,000
-     * IE8-9: 1,000,000 // should be obsolet
-     * IE6-7: 128,000,000 (yes, more than newer IEs)
-     *
+     * 
+     * other browser never tested
      */
     private static MAX_SIZE = 6 * 1000 * 1000 * 1000
 
