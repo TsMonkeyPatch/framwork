@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ScrollPosition } from '@lib/core/common';
-import { DataProvider } from '@lib/core/datalist/public-api';
+import { TsMonkeyPatchDataSource } from '@lib/core/scroll/public-api';
 import { WindowScrollProvider } from '@tsmonkeypatch/core/common';
 import { PaginationController } from '@tsmonkeypatch/core/pagination';
 import { DataSource } from './utils/datasource';
@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
 
   public data: number[] = Array.from(Array(40)).map((value ,index) => index);
 
-  datasource: DataProvider<any> = new DataSource
+  datasource: TsMonkeyPatchDataSource<any> = new DataSource()
 
   public constructor(
     private windowScrollProvider: WindowScrollProvider,
@@ -36,6 +36,9 @@ export class AppComponent implements OnInit {
 
   nextPage() {
     this.paginationController.nextPage();
+  }
+
+  resetData() {
   }
 
   scrollToPageEnd() {

@@ -27,7 +27,10 @@
 </div>
 
 <div class="container main">
-    <tsmp-datalist-viewport [source]="datasource"></tsmp-datalist-viewport>
+    <tsmp-virtual-scroll [source]="datasource">
+    </tsmp-virtual-scroll>
+
+    <button type="button" (click)="resetData()">apply filter</button>
 </div>
 
 <div class="footer">

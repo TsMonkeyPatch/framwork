@@ -8,6 +8,7 @@ import { TsMonkeyPatchPaginationModule } from '@tsmonkeypatch/core/pagination';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TsMonkeyPatchDatalistModule } from '@lib/core/datalist/public-api';
+import { TsMonkeyPatchScrollModule } from '@lib/core/scroll/public-api';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { TsMonkeyPatchDatalistModule } from '@lib/core/datalist/public-api';
     TsMonkeyPatchCommonModule,
     TsMonkeyPatchOverlayModule,
     TsMonkeyPatchPaginationModule,
-    TsMonkeyPatchDatalistModule
+    TsMonkeyPatchDatalistModule,
+    TsMonkeyPatchScrollModule
   ],
   providers: [],
   bootstrap: [AppComponent]
