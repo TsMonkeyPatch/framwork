@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { InfiniteDataSource } from '../utils/infinite-data.source';
 
 @Component({
-    selector: 'app-infinita-data',
+    selector: 'sandbox-infinita-data',
     templateUrl: './infinite-data.html'
 })
 export class InfiniteDataComponent implements OnInit {

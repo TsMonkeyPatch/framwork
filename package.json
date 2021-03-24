@@ -12,7 +12,8 @@
     "postbuild": "node ./bin/postbuild.js && npm run package && npm run install-library",
     "package": "npm run package:core",
     "package:core": "tar -cvf ./dist/core.tar.gz -C dist/core .",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {

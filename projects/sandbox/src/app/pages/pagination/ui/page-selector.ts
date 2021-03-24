@@ -6,11 +6,11 @@ import { takeUntil } from 'rxjs/operators'
 import { PageDataSource } from '../utils/page-datasource'
 
 @Component({
-    selector: 'pagination--page-selector',
+    selector: 'sandbox-pagination--page-selector',
     templateUrl: './page-selector.html',
     styleUrls: ['./page-selector.scss']
 })
-export class PageSelector implements AfterViewInit, OnInit, OnDestroy {
+export class PageSelectorComponent implements AfterViewInit, OnInit, OnDestroy {
 
     dataSource: PageDataSource
 
@@ -38,7 +38,7 @@ export class PageSelector implements AfterViewInit, OnInit, OnDestroy {
 
     /**
      * component has been initialized register to changes of pagination
-     * 
+     *
      */
     ngOnInit(): void {
         this.dataSource.count = 5

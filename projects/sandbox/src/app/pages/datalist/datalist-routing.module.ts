@@ -4,7 +4,7 @@ import { DatalistPage } from './ui/datalist';
 
 @NgModule({
     declarations: [],
-    imports: [ 
+    imports: [
         RouterModule.forChild([
             {
                 path: "",

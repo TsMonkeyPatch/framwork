@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
-    selector: 'forms',
+    selector: 'sandbox-forms',
     templateUrl: './forms.html',
     styleUrls: ['./forms.scss']
 })

@@ -6,12 +6,12 @@ import { TsMonkeyPatchOverlayModule } from '@tsmonkeypatch/core/overlay';
 import { TsMonkeyPatchPaginationModule } from '@tsmonkeypatch/core/pagination';
 import { PaginationPageRoutingModule } from './pagination-routing.module';
 import { PaginationPage } from './ui/pagination';
-import { PageSelector } from './ui/page-selector';
+import { PageSelectorComponent } from './ui/page-selector';
 
 @NgModule({
     declarations: [
         PaginationPage,
-        PageSelector
+        PageSelectorComponent
     ],
     imports: [
         CommonModule,

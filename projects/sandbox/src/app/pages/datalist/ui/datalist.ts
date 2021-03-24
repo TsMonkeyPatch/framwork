@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'app-datalist',
+    selector: 'sandbox-datalist',
     templateUrl: './datalist.html'
 })
 export class DatalistPage {

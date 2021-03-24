@@ -6,7 +6,7 @@ import { PaginationController } from '@tsmonkeypatch/core/pagination';
 import { DataSource } from './utils/datasource';
 
 @Component({
-  selector: 'app-root',
+  selector: 'sandbox-root',
   templateUrl: "app.html",
   styleUrls: ["./app.scss"],
   viewProviders: [ TsMpDatalistControl ]
