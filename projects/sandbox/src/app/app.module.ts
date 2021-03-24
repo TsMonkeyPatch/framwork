@@ -4,10 +4,11 @@ import { NgModule } from '@angular/core';
 import { TsMonkeyPatchCommonModule } from '@tsmonkeypatch/core/common';
 import { TsMonkeyPatchOverlayModule } from '@tsmonkeypatch/core/overlay';
 import { TsMonkeyPatchPaginationModule } from '@tsmonkeypatch/core/pagination';
-import { TsMonkeyPatchDatalistModule } from '@tsmonkeypatch/core/datalist';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { TsMonkeyPatchDatalistModule } from '@lib/core/datalist/public-api';
+import { TsMonkeyPatchVirtualScrollModule } from '@lib/core/virtual-scroll/public-api';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { AppComponent } from './app.component';
     TsMonkeyPatchCommonModule,
     TsMonkeyPatchOverlayModule,
     TsMonkeyPatchPaginationModule,
-    TsMonkeyPatchDatalistModule
+    TsMonkeyPatchDatalistModule,
+    TsMonkeyPatchVirtualScrollModule
   ],
   providers: [],
   bootstrap: [AppComponent]

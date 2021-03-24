@@ -88,12 +88,12 @@ export abstract class DataProvider<T = any> {
      * load data
      *
      */
-    load(start: number): boolean {
+    load(start: number, count?: number): boolean {
 
-        let from = this.total < 0 ? start :  Math.min(this.total - this.count, start) 
+        let from = this.total < 0 ? start :  Math.min(this.total -  count ?? this.count, start) 
             from = Math.max(0, from)
 
-        const to = this.count
+        const to = count ?? this.count
 
         if (this.canLoad(from, to)) {
             this.loadedIndex = from;
