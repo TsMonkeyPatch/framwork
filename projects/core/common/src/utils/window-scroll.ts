@@ -70,12 +70,10 @@ export class WindowScrollProvider {
             fromEvent(window, 'scroll').pipe(
                 takeUntil(this.removeEvent$),
                 debounceTime(0, animationFrameScheduler),
-                map<Event, ScrollPosition>(() => {
-                    return {
+                map<Event, ScrollPosition>(() => ({
                         left: window.scrollX,
                         top: window.scrollY
-                    }
-                })
+                    }))
             )
             .subscribe(this.broadcast$);
         });

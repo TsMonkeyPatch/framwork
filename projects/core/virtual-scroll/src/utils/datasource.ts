@@ -42,7 +42,7 @@ export abstract class VirtualScrollDataSource<T> extends DataSource<T> {
 
     /**
      * @inheritdoc
-     * 
+     *
      */
     connect(collectionViewer: CollectionViewer): Observable<T[] | ReadonlyArray<T>> {
         const subscription = collectionViewer.viewChange.subscribe((range) => this.load(range))

@@ -1,23 +1,22 @@
 import { NgModule } from '@angular/core';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { TsMonkeyPatchOverlay } from './overlay';
-import { TsMonkeyPatchOverlayControl } from './overlay.control';
-import { TsMonkeyPatchOverlayTrigger } from './overlay.trigger';
+import { TsMonkeyPatchOverlayControlDirective } from './overlay.control';
+import { TsMonkeyPatchOverlayTriggerDirective } from './overlay.trigger';
+import { TsMonkeyPatchOverlayComponent } from './overlay';
 
 @NgModule({
     imports: [
         OverlayModule
     ],
     exports: [
-        TsMonkeyPatchOverlay,
-        TsMonkeyPatchOverlayControl,
-        TsMonkeyPatchOverlayTrigger
+        TsMonkeyPatchOverlayComponent,
+        TsMonkeyPatchOverlayControlDirective,
+        TsMonkeyPatchOverlayTriggerDirective
     ],
     declarations: [
-        TsMonkeyPatchOverlay,
-        TsMonkeyPatchOverlayControl,
-        TsMonkeyPatchOverlayTrigger
-    ],
-    providers: [],
+        TsMonkeyPatchOverlayComponent,
+        TsMonkeyPatchOverlayControlDirective,
+        TsMonkeyPatchOverlayTriggerDirective
+    ]
 })
 export class TsMonkeyPatchOverlayModule { }

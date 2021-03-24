@@ -7,7 +7,7 @@ export class MemoryDataProvider<T> extends DataProvider<T> {
 
     /**
      * set the data source
-     * 
+     *
      */
     public set source(data: T[]) {
         this.data = data;

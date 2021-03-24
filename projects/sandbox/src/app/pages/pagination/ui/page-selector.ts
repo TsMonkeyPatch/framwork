@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Host, OnDestroy, OnInit } from '@angular/core'
-import { TsMonkeyPatchOverlay } from '@tsmonkeypatch/core/overlay'
+import { TsMonkeyPatchOverlayComponent } from '@tsmonkeypatch/core/overlay'
 import { PaginationController } from '@tsmonkeypatch/core/pagination'
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
@@ -20,7 +20,7 @@ export class PageSelector implements AfterViewInit, OnInit, OnDestroy {
 
     constructor(
         private paginationController: PaginationController,
-        @Host() private overlay: TsMonkeyPatchOverlay
+        @Host() private overlay: TsMonkeyPatchOverlayComponent
     ) {
         this.destroy$ = new Subject()
         this.dataSource = new PageDataSource()

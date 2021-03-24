@@ -1,7 +1,7 @@
 import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild } from '@angular/core'
 import { fromEvent, ReplaySubject, Subject } from 'rxjs'
 import { filter, finalize, switchMap, takeUntil, tap } from 'rxjs/operators'
-import { NavigableListEvent, TsMonkeyPatchNavigableList } from '@tsmonkeypatch/core/common'
+import { NavigableListEvent, TsMonkeyPatchNavigableListDirective } from '@tsmonkeypatch/core/common'
 import { DataProvider } from '../utils/data.provider'
 import { MemoryDataProvider } from '../utils/memory'
 
@@ -12,7 +12,7 @@ import { MemoryDataProvider } from '../utils/memory'
     exportAs: "datalist",
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChecked {
+export class TsMonkeyPatchDatalistComponent<T> implements OnInit, OnDestroy, AfterViewChecked {
 
     /**
      * item stream
@@ -25,7 +25,7 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
      *
      */
     @Output()
-    select: EventEmitter<T> = new EventEmitter()
+    selected: EventEmitter<T> = new EventEmitter()
 
     /**
      * max display count of items
@@ -42,15 +42,15 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
     disableScroll = false
 
     /**
-     * flage data has been changed so we could update the current state 
+     * flage data has been changed so we could update the current state
      * of navigable list item
      *
      */
     private dataChanged = false
 
     /**
-     * 
-     * 
+     *
+     *
      */
     private dataSource: DataProvider
 
@@ -77,8 +77,8 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
      *
      *
      */
-    @ViewChild(TsMonkeyPatchNavigableList, { read:  TsMonkeyPatchNavigableList, static: true })
-    private navigableList: TsMonkeyPatchNavigableList
+    @ViewChild(TsMonkeyPatchNavigableListDirective, { read:  TsMonkeyPatchNavigableListDirective, static: true })
+    private navigableList: TsMonkeyPatchNavigableListDirective
 
     /**
      *
@@ -87,7 +87,7 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
     @Input()
     set source(source: T[] | DataProvider<T>) {
 
-        if (source instanceof DataProvider) {
+        if (!Array.isArray(source)) {
             this.dataSource = source
             return
         }
@@ -120,7 +120,7 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
     /**
      * initialize component and register to datasource loaded
      * stream, also load first 5 items
-     * 
+     *
      */
     ngOnInit(): void {
 
@@ -150,14 +150,14 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
 
     /**
      * go down for 1 item
-     * 
+     *
      */
     nextItem() {
         this.dataSource.load(this.dataSource.current + 1)
     }
 
     /**
-     * go up for 1 item 
+     * go up for 1 item
      *
      */
     prevItem() {
@@ -166,7 +166,7 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
 
     /**
      * on before next item
-     * 
+     *
      */
     onNavigate(event: NavigableListEvent) {
         this.direction = event.params.direction
@@ -184,7 +184,7 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
     }
 
     selectItem(item: T) {
-        this.select.emit(item)
+        this.selected.emit(item)
     }
 
     /**
@@ -210,7 +210,7 @@ export class TsMonkeyPatchDatalist<T> implements OnInit, OnDestroy, AfterViewChe
             const mouseWheel$ = fromEvent<WheelEvent>(this.el.nativeElement, 'mousewheel')
 
             const destroy$ = mouseout$.pipe(
-                filter((event: MouseEvent) => !this.el.nativeElement.contains(event.target as HTMLElement)) 
+                filter((event: MouseEvent) => !this.el.nativeElement.contains(event.target as HTMLElement))
             )
             
             mouseover$.pipe(

@@ -23,7 +23,7 @@ export interface OverlayControl {
         </ng-template>
     `
 })
-export class TsMonkeyPatchOverlay {
+export class TsMonkeyPatchOverlayComponent {
 
     @ViewChild('wrapper', {read: TemplateRef, static: true})
     public template: TemplateRef<void>;

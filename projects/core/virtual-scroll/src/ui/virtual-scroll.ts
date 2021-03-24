@@ -19,7 +19,7 @@ export interface TemplateOutletContext<T> {
     styleUrls: ['./virtual-scroll.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TsMonkeyPatchVirtualScroll<T> implements CollectionViewer, OnDestroy, OnInit {
+export class TsMonkeyPatchVirtualScrollComponent<T> implements CollectionViewer, OnDestroy, OnInit {
 
     /**
      * set item height
@@ -102,9 +102,9 @@ export class TsMonkeyPatchVirtualScroll<T> implements CollectionViewer, OnDestro
 
     /**
      * set the max height of the document to 1million px, by default chrome seems to handle a max height
-     * of 33.5 Million Pixel but it seems even on less pixel (tested with 6 million) we got some scrolling issues 
+     * of 33.5 Million Pixel but it seems even on less pixel (tested with 6 million) we got some scrolling issues
      * like a rubber band
-     * 
+     *
      * so set max_size of document to 750k pixels this seems to be good
      */
     private static MAX_SIZE = 1000 * 750
@@ -169,8 +169,8 @@ export class TsMonkeyPatchVirtualScroll<T> implements CollectionViewer, OnDestro
     }
 
     /**
-     * initialize data 
-     * 
+     * initialize data
+     *
      */
     private loadInitialDataset() {
         const viewportHeight = this.viewport.nativeElement.getBoundingClientRect().height
@@ -204,10 +204,10 @@ export class TsMonkeyPatchVirtualScroll<T> implements CollectionViewer, OnDestro
 
         // the original height is gt MAX_SIZE so we use the MAX_SIZE (750k pixels)
         const virtualHeight = this.total * this.itemHeight
-        if (virtualHeight > TsMonkeyPatchVirtualScroll.MAX_SIZE) {
+        if (virtualHeight > TsMonkeyPatchVirtualScrollComponent.MAX_SIZE) {
 
             const viewportHeight = this.viewport.nativeElement.clientHeight
-            const offsetMax = TsMonkeyPatchVirtualScroll.MAX_SIZE - viewportHeight
+            const offsetMax = TsMonkeyPatchVirtualScrollComponent.MAX_SIZE - viewportHeight
             const offsetScrolled = Math.min(top, offsetMax);
             const virtualOffsetMax = virtualHeight - viewportHeight
             const virtualOffsetScrolled = offsetScrolled * virtualOffsetMax / offsetMax
@@ -236,7 +236,7 @@ export class TsMonkeyPatchVirtualScroll<T> implements CollectionViewer, OnDestro
      */
     private translateContent(loaded: number) {
         const top = (this.range?.[0] ?? 0) * this.itemHeight
-        const totalHeight = Math.min(this.total * this.itemHeight, TsMonkeyPatchVirtualScroll.MAX_SIZE)
+        const totalHeight = Math.min(this.total * this.itemHeight, TsMonkeyPatchVirtualScrollComponent.MAX_SIZE)
 
         if (!this.range) {
             return
@@ -289,7 +289,7 @@ export class TsMonkeyPatchVirtualScroll<T> implements CollectionViewer, OnDestro
      *
      */
     private resetScrollView() {
-        const totalHeight = Math.min(this.total * this.itemHeight, TsMonkeyPatchVirtualScroll.MAX_SIZE)
+        const totalHeight = Math.min(this.total * this.itemHeight, TsMonkeyPatchVirtualScrollComponent.MAX_SIZE)
         this.renderer.setStyle(this.virtualSpace.nativeElement, `height`, `${totalHeight}px`)
         this.scrollTop()
     }

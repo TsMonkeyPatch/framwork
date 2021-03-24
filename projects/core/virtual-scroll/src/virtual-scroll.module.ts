@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TsMonkeyPatchCommonModule } from '@tsmonkeypatch/core/common';
-import { TsMonkeyPatchVirtualScroll } from './ui/virtual-scroll';
+import { TsMonkeyPatchVirtualScrollComponent } from './ui/virtual-scroll';
 
 @NgModule({
     declarations: [
-        TsMonkeyPatchVirtualScroll
+        TsMonkeyPatchVirtualScrollComponent
     ],
     imports: [
         CommonModule,
         TsMonkeyPatchCommonModule
     ],
     exports: [
-        TsMonkeyPatchVirtualScroll
+        TsMonkeyPatchVirtualScrollComponent
     ]
 })
 export class TsMonkeyPatchVirtualScrollModule {}

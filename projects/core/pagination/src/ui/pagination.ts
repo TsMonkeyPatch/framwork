@@ -9,7 +9,7 @@ import { Subscription } from "rxjs";
     styleUrls: ['./pagination.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Pagination implements OnInit, OnDestroy {
+export class PaginationComponent implements OnInit, OnDestroy {
 
     /**
      * subscription for templatedata has been changed
@@ -48,7 +48,7 @@ export class Pagination implements OnInit, OnDestroy {
     }
 
     /**
-     * component gets destroyed, remove subscription from 
+     * component gets destroyed, remove subscription from
      * pagination controller
      *
      */
@@ -59,7 +59,7 @@ export class Pagination implements OnInit, OnDestroy {
 
     /**
      * goto page
-     * 
+     *
      */
     goTo(item: PaginationItem) {
         this.paginationCtrl.goTo(item.value as number);
@@ -67,14 +67,14 @@ export class Pagination implements OnInit, OnDestroy {
 
     /**
      * goto next page
-     * 
+     *
      */
     nextPage() {
         this.paginationCtrl.nextPage();
     }
 
     /**
-     * goto prev page 
+     * goto prev page
      *
      */
     prevPage() {

@@ -2,9 +2,9 @@ import { Directive, ElementRef, EventEmitter, Host, HostListener, Inject, Input,
 import { ConnectionPositionPair, Overlay, OverlayRef, PositionStrategy } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { fromEvent, Subject } from 'rxjs';
-import { TsMonkeyPatchOverlay } from './overlay';
 import { takeUntil } from 'rxjs/operators';
 import { PositionFactory } from './position.factory';
+import { TsMonkeyPatchOverlayComponent } from './overlay';
 
 export enum OverlayViewState {
     HIDDEN,
@@ -12,19 +12,19 @@ export enum OverlayViewState {
 }
 
 @Directive({
-    selector: '[tsMonkeyPatchOverlay]'
+    selector: '[tsmpOverlay]'
 })
-export class TsMonkeyPatchOverlayControl implements OnInit, OnDestroy {
+export class TsMonkeyPatchOverlayControlDirective implements OnInit, OnDestroy {
 
     @Input()
-    public tsMonkeyPatchOverlay: TsMonkeyPatchOverlay = null;
+    public tsmpOverlay: TsMonkeyPatchOverlayComponent = null;
 
     /**
      * sets width strategy for the overlay
-     * 
+     *
      * host - overlay gets the same width as the host element
      * none - width is set to auto
-     * 
+     *
      */
     @Input()
     public widthStrategy: 'host' | 'none' = 'none';
@@ -121,9 +121,9 @@ export class TsMonkeyPatchOverlayControl implements OnInit, OnDestroy {
             this.overlayRef = this.createOverlayRef();
         }
 
-        const portal = new TemplatePortal(this.tsMonkeyPatchOverlay.template, this.viewRef);
+        const portal = new TemplatePortal(this.tsmpOverlay.template, this.viewRef);
 
-        this.tsMonkeyPatchOverlay.control = this;
+        this.tsmpOverlay.control = this;
         this.overlayRef.attach(portal);
         this.viewState = OverlayViewState.VISIBLE;
         this.viewStateChange.emit(this.viewState);
