@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ScrollPosition } from '@lib/core/common';
-import { TsMonkeyPatchDataSource } from '@lib/core/scroll/public-api';
+import { TsMpDatalistControl } from '@lib/core/virtual-scroll/src/utils/control';
 import { WindowScrollProvider } from '@tsmonkeypatch/core/common';
 import { PaginationController } from '@tsmonkeypatch/core/pagination';
 import { DataSource } from './utils/datasource';
@@ -8,37 +8,46 @@ import { DataSource } from './utils/datasource';
 @Component({
   selector: 'app-root',
   templateUrl: "app.html",
-  styleUrls: ["./app.scss"]
+  styleUrls: ["./app.scss"],
+  viewProviders: [ TsMpDatalistControl ]
 })
 export class AppComponent implements OnInit {
 
-  title = 'sandbox';
+  title = 'sandbox'
 
-  public data: number[] = Array.from(Array(40)).map((value ,index) => index);
+  data: number[] = Array.from(Array(40)).map((value ,index) => index)
 
-  datasource: TsMonkeyPatchDataSource<any> = new DataSource()
+  datasource = new DataSource()
 
   public constructor(
     private windowScrollProvider: WindowScrollProvider,
-    private paginationController: PaginationController
+    private paginationController: PaginationController,
+    private datalistCtrl: TsMpDatalistControl<string>
   ) { }
 
   ngOnInit() {
     this.paginationController.update({
       page: 1,
       total: 20
-    });
+    })
   }
 
   prevPage() {
-    this.paginationController.prevPage();
+    this.paginationController.prevPage()
   }
 
   nextPage() {
-    this.paginationController.nextPage();
+    this.paginationController.nextPage()
   }
 
-  resetData() {
+  addFilter() {
+    this.datasource.filter = true
+    this.datalistCtrl.reload()
+  }
+
+  clearFilter() {
+    this.datasource.filter = false
+    this.datalistCtrl.reload()
   }
 
   scrollToPageEnd() {

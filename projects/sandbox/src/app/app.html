@@ -27,10 +27,20 @@
 </div>
 
 <div class="container main">
-    <tsmp-virtual-scroll [source]="datasource">
+
+    <ng-template #virtualScrollTemplate let-items="items">
+        <ul style="margin: 0; padding: 0 0 0 1rem; list-style-type: none;">
+            <li *ngFor="let item of items" [ngStyle]="{height: '40px'}">
+                item: {{item}}
+            </li>
+        </ul>
+    </ng-template>
+
+    <tsmp-virtual-scroll [source]="datasource" [template]="virtualScrollTemplate">
     </tsmp-virtual-scroll>
 
-    <button type="button" (click)="resetData()">apply filter</button>
+    <button type="button" (click)="addFilter()">apply filter</button>
+    <button type="button" (click)="clearFilter()">reset filter</button>
 </div>
 
 <div class="footer">

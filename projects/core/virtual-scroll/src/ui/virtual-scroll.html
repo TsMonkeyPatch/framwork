@@ -1,0 +1,13 @@
+<ng-template #defaultTemplate let-items="items">
+    <ul>
+        <li [ngStyle]="{'height': itemHeight + 'px'}" *ngFor="let item of items">{{item}}</li>
+    </ul>
+</ng-template>
+
+<div #viewport class="tsmp-viewport">
+    <div #content class="tsmp-content-wrapper">
+        <ng-container *ngIf="items" [ngTemplateOutlet]="template || defaultTemplate" [ngTemplateOutletContext]="{items: items}">
+        </ng-container>
+    </div>
+    <div #virtualspace class="tsmp-virtual-space"></div>
+</div> 
