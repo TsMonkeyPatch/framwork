@@ -36,6 +36,11 @@
         </ul>
     </ng-template>
 
+    <div class="control">
+        <input type="file" (change)="fileChange($event)" [formControl]="fileCtrl">
+        <input type="submit" (click)="submitFile()">
+    </div>
+
     <tsmp-virtual-scroll [source]="datasource" [template]="virtualScrollTemplate">
     </tsmp-virtual-scroll>
 

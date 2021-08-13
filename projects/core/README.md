@@ -1,3 +1,5 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/tsmonkeypatch/framwork/badge/master)](https://www.codefactor.io/repository/github/tsmonkeypatch/framwork/overview/master)
+
 # TsMonkeyPatch Core
 
 Angular Library with several modules created as part of the [YouTube project](https://www.youtube.com/channel/UCq6b8A1Je9oPdJAoorfeDQw) which is constantly growing. Each module can be imported and used separately.
