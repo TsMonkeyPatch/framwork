@@ -27,7 +27,7 @@
     "@angular/platform-browser-dynamic": "12.2.1",
     "@angular/router": "12.2.1",
     "@tsmonkeypatch/core": "file:dist/core.tar.gz",
-    "bootstrap-scss": "4.6.0",
+    "bootstrap-scss": "5.1.0",
     "ncp": "^2.0.0",
     "rxjs": "6.6.7",
     "tslib": "2.1.0",
