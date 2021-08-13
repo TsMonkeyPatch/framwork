@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TsMonkeyPatchOverlayModule } from '@tsmonkeypatch/core/overlay';
+import { FormsModule } from '@angular/forms';
 import { TsMonkeyPatchDatalistModule } from '@tsmonkeypatch/core/datalist';
+import { TsMonkeyPatchOverlayModule } from '@tsmonkeypatch/core/overlay';
 import { TsMonkeyPatchPaginationModule } from '@tsmonkeypatch/core/pagination';
 import { PaginationPageRoutingModule } from './pagination-routing.module';
 import { PaginationPage } from './ui/pagination';
-import { PageSelector } from './ui/page-selector';
-import { FormsModule } from '@angular/forms';
+import { PageSelectorComponent } from './ui/page-selector';
 
 @NgModule({
     declarations: [
         PaginationPage,
-        PageSelector
+        PageSelectorComponent
     ],
     imports: [
         CommonModule,

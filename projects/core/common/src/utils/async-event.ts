@@ -25,7 +25,7 @@ export class AsyncEvent<T = any> {
 
     /**
      * emits only one time and complete
-     * 
+     *
      */
     get complete(): Observable<boolean> {
         return this.event$.pipe(take(1));
@@ -33,7 +33,7 @@ export class AsyncEvent<T = any> {
 
     /**
      * continue
-     * 
+     *
      */
     next() {
         this.finalize(true);
@@ -41,7 +41,7 @@ export class AsyncEvent<T = any> {
 
     /**
      * cancel event
-     * 
+     *
      */
     cancel() {
         this.finalize(false);

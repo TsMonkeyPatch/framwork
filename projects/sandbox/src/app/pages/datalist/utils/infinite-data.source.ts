@@ -5,7 +5,7 @@ export class InfiniteDataSource extends DataProvider<number> {
 
     /**
      * check we can load more data before we send an request
-     * 
+     *
      */
     canLoad(): boolean {
         return true;

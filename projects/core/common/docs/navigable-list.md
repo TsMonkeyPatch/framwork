@@ -137,11 +137,10 @@ export enum KEY_CODE {
 |-|-|-|
 |setActiveItem|number|set active item, this will trigger a focus event on an item|
 
-
 ### NavigableListItemDirective
 
 #### @Output
 |name|type|description|
 |-|-|-|
-|onFocus|EventEmitter\<void\>|fires if the list item recieves focus|
+|focused|EventEmitter\<void\>|fires if the list item recieves focus|
 

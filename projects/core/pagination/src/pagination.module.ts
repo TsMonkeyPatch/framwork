@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Pagination } from './ui/pagination';
+import { PaginationComponent } from './ui/pagination';
 import { PaginationController } from './utils/pagination.controller';
 
 @NgModule({
     declarations: [
-        Pagination
+        PaginationComponent
     ],
     imports: [
         CommonModule
@@ -14,7 +14,7 @@ import { PaginationController } from './utils/pagination.controller';
         PaginationController
     ],
     exports: [
-        Pagination
+        PaginationComponent
     ]
 })
 export class TsMonkeyPatchPaginationModule {}

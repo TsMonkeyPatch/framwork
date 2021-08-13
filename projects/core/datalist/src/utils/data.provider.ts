@@ -32,7 +32,7 @@ export abstract class DataProvider<T = any> {
      */
     private load$: ReplaySubject<{from: number, to: number}> = new ReplaySubject(1)
 
-    /** 
+    /**
      *
      *
      */
@@ -88,12 +88,14 @@ export abstract class DataProvider<T = any> {
      * load data
      *
      */
-    load(start: number): boolean {
+    load(start: number, count?: number): boolean {
 
-        let from = this.total < 0 ? start :  Math.min(this.total - this.count, start) 
+        const end = count ?? this.count
+
+        let from = this.total < 0 ? start :  Math.min(this.total - end, start)
             from = Math.max(0, from)
 
-        const to = this.count
+        const to = count ?? this.count
 
         if (this.canLoad(from, to)) {
             this.loadedIndex = from;

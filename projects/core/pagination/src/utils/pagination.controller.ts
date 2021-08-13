@@ -75,7 +75,7 @@ export class PaginationController {
 
     /**
      * pagination data has been changed
-     * 
+     *
      */
     get change(): Observable<PaginationData> {
         if (!this.dataInitialized) {
@@ -213,7 +213,7 @@ export class PaginationController {
 
             /**
              * base template: [1, '...', '...', l] (l = last page)
-             * 
+             *
              * page 1: move to index 1 and replace 1 item -> [1, pages, '...', l]
              * page n: move to index 2 and replace 0 item -> [1, '...', pages, '...', l]
              * page l: move to index 2 and replace 1 item -> [1, '...', pages, l]

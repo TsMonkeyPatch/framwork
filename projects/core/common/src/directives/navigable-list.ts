@@ -1,4 +1,4 @@
-import { AfterViewInit, ContentChildren, Directive, ElementRef, EventEmitter, HostListener, Output, QueryList } from '@angular/core';
+import { AfterViewInit, ContentChildren, Directive, ElementRef, EventEmitter, HostBinding, HostListener, Output, QueryList } from '@angular/core';
 import { FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
 import { AsyncEvent } from '../utils/async-event';
 
@@ -9,7 +9,7 @@ export enum KEY_CODE {
 
 export interface NavigationState {
     /**
-     * current keycode , arrow down or up 
+     * current keycode , arrow down or up
      *
      */
     key: KEY_CODE;
@@ -37,22 +37,22 @@ export declare type NavigableListEvent = AsyncEvent<NavigationState>;
 
 /**
  * Directive for a focusable item
- * 
+ *
  */
 @Directive({
-    selector: '[tsmpNavigableListItem]',
-    host: {
-        tabIndex: "-1"
-    }
+    selector: '[tsmpNavigableListItem]'
 })
-export class TsMonkeyPatchNavigableListItem implements FocusableOption {
+export class TsMonkeyPatchNavigableListItemDirective implements FocusableOption {
+
+    @HostBinding('attr.tabIndex')
+    tabIndex = "-1"
 
     /**
      * output event to get notified we focused the current element
      *
      */
     @Output()
-    onFocus: EventEmitter<void> = new EventEmitter();
+    focused: EventEmitter<void> = new EventEmitter();
 
     constructor(
         private el: ElementRef<HTMLElement>,
@@ -65,7 +65,7 @@ export class TsMonkeyPatchNavigableListItem implements FocusableOption {
      */
     focus(): void {
         this.el.nativeElement.focus();
-        this.onFocus.emit();
+        this.focused.emit();
     }
 }
 
@@ -76,7 +76,7 @@ export class TsMonkeyPatchNavigableListItem implements FocusableOption {
 @Directive({
     selector: '[tsmpNavigableList]',
 })
-export class  TsMonkeyPatchNavigableList implements AfterViewInit {
+export class TsMonkeyPatchNavigableListDirective implements AfterViewInit {
 
     /**
      * before next item event
@@ -90,15 +90,15 @@ export class  TsMonkeyPatchNavigableList implements AfterViewInit {
      * all content children which are focusable
      *
      */
-    @ContentChildren(TsMonkeyPatchNavigableListItem, {read: TsMonkeyPatchNavigableListItem})
-    private items: QueryList<TsMonkeyPatchNavigableListItem>;
+    @ContentChildren(TsMonkeyPatchNavigableListItemDirective, {read: TsMonkeyPatchNavigableListItemDirective})
+    private items: QueryList<TsMonkeyPatchNavigableListItemDirective>;
 
     /**
      * focus keymanager from angular cdk which helps us to delegate through html elements
      * with the keyboard
      *
      */
-    private focusKeyManager: FocusKeyManager<TsMonkeyPatchNavigableListItem>;
+    private focusKeyManager: FocusKeyManager<TsMonkeyPatchNavigableListItemDirective>;
 
     /**
      * construct focus key manager instance and pass focusable items
@@ -138,7 +138,7 @@ export class  TsMonkeyPatchNavigableList implements AfterViewInit {
 
     /**
      * control navigation event before we move
-     * 
+     *
      */
     private async beforeNext($event: KeyboardEvent) {
 
@@ -149,7 +149,7 @@ export class  TsMonkeyPatchNavigableList implements AfterViewInit {
             $event.stopPropagation();
             $event.preventDefault();
 
-            const active          = this.focusKeyManager.activeItemIndex; 
+            const active          = this.focusKeyManager.activeItemIndex;
             const direction: 1|-1 = key === KEY_CODE.ARROW_DOWN ? 1 : -1;
             const keyCode         = key === KEY_CODE.ARROW_DOWN ? KEY_CODE.ARROW_DOWN : KEY_CODE.ARROW_UP;
             const next            = active + direction;

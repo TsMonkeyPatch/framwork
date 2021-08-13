@@ -25,7 +25,6 @@
           "skipTests": true
         },
         "@schematics/angular:module": {
-          "skipTests": true
         },
         "@schematics/angular:pipe": {
           "skipTests": true
@@ -46,7 +45,6 @@
             "main": "projects/sandbox/src/main.ts",
             "polyfills": "projects/sandbox/src/polyfills.ts",
             "tsConfig": "projects/sandbox/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "projects/sandbox/src/favicon.ico",
               "projects/sandbox/src/assets"
@@ -59,7 +57,13 @@
             "styles": [
               "projects/sandbox/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -89,7 +93,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -106,6 +111,15 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "sandbox:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/sandbox/**/*.ts",
+              "projects/sandbox/**/*.html"
+            ]
           }
         }
       }
@@ -137,14 +151,11 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/core/tsconfig.lib.json",
-              "projects/core/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "projects/core/**/*.ts",
+              "projects/core/**/*.html"
             ]
           }
         }

@@ -1,16 +1,16 @@
 import { AfterViewInit, Component, Host, OnDestroy, OnInit } from '@angular/core'
-import { TsMonkeyPatchOverlay } from '@tsmonkeypatch/core/overlay'
+import { TsMonkeyPatchOverlayComponent } from '@tsmonkeypatch/core/overlay'
 import { PaginationController } from '@tsmonkeypatch/core/pagination'
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import { PageDataSource } from '../utils/page-datasource'
 
 @Component({
-    selector: 'pagination--page-selector',
+    selector: 'sandbox-pagination--page-selector',
     templateUrl: './page-selector.html',
     styleUrls: ['./page-selector.scss']
 })
-export class PageSelector implements AfterViewInit, OnInit, OnDestroy {
+export class PageSelectorComponent implements AfterViewInit, OnInit, OnDestroy {
 
     dataSource: PageDataSource
 
@@ -20,7 +20,7 @@ export class PageSelector implements AfterViewInit, OnInit, OnDestroy {
 
     constructor(
         private paginationController: PaginationController,
-        @Host() private overlay: TsMonkeyPatchOverlay
+        @Host() private overlay: TsMonkeyPatchOverlayComponent
     ) {
         this.destroy$ = new Subject()
         this.dataSource = new PageDataSource()
@@ -38,7 +38,7 @@ export class PageSelector implements AfterViewInit, OnInit, OnDestroy {
 
     /**
      * component has been initialized register to changes of pagination
-     * 
+     *
      */
     ngOnInit(): void {
         this.dataSource.count = 5

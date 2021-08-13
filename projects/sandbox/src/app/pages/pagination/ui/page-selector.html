@@ -1,3 +1,3 @@
 <input type="number" [(ngModel)]="active" (keydown.enter)="selectPage(active)">
-<tsmp-datalist [source]="dataSource" (select)="selectPage($event)">
+<tsmp-datalist [source]="dataSource" (selected)="selectPage($event)">
 </tsmp-datalist>

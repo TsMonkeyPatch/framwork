@@ -1,22 +1,22 @@
 import { ElementRef, Host, OnDestroy, OnInit } from '@angular/core';
 import { Directive, Input } from '@angular/core';
-import { TsMonkeyPatchOverlayControl } from './overlay.control';
+import { TsMonkeyPatchOverlayControlDirective } from './overlay.control';
 import { fromEvent, Subscription } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
 @Directive({
-    selector: '[tsMonkeyPatchOverlayTrigger]',
+    selector: '[tsmpOverlayTrigger]',
     providers: [{ provide: 'trigger', useValue: true}]
 })
-export class TsMonkeyPatchOverlayTrigger implements OnDestroy, OnInit {
+export class TsMonkeyPatchOverlayTriggerDirective implements OnDestroy, OnInit {
 
     @Input()
-    public tsMonkeyPatchOverlayTrigger: 'click' | 'hover' | 'focus';
+    public tsmpOverlayTrigger: 'click' | 'hover' | 'focus';
 
     private eventSubscription: Subscription;
 
     constructor(
-        @Host() private overlayCtrl: TsMonkeyPatchOverlayControl,
+        @Host() private overlayCtrl: TsMonkeyPatchOverlayControlDirective,
         private el: ElementRef<HTMLElement>
     ) { }
 
@@ -25,7 +25,7 @@ export class TsMonkeyPatchOverlayTrigger implements OnDestroy, OnInit {
      *
      */
     ngOnInit() {
-        switch (this.tsMonkeyPatchOverlayTrigger) {
+        switch (this.tsmpOverlayTrigger) {
             case 'focus':
                 this.registerFocusListener();
                 break;
@@ -50,7 +50,7 @@ export class TsMonkeyPatchOverlayTrigger implements OnDestroy, OnInit {
 
     /**
      * register for mouseclick
-     * 
+     *
      */
     private registerClickListener() {
         const click$ = fromEvent(this.el.nativeElement, 'click');

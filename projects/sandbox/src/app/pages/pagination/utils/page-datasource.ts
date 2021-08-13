@@ -1,4 +1,4 @@
-import { DataProvider, DataSourceSetting } from "@tsmonkeypatch/core/datalist";
+import { DataProvider } from "@tsmonkeypatch/core/datalist";
 import { Observable, of } from "rxjs";
 
 export class PageDataSource extends DataProvider<number> {
@@ -29,8 +29,11 @@ export class PageDataSource extends DataProvider<number> {
      *
      */
     protected fetch(start: number, count: number): Observable<number[]> {
+
         const data = Array(count);
         const max = start + count;
+
+        console.log(start)
 
         for(let i = start, j = 0; i < max; i++, j++) {
             data[j] = i + 1

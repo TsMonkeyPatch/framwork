@@ -13,7 +13,7 @@ export interface ElementBounds {
 }
 
 @Directive({
-    selector: '[tsMonkeyPatchSticky]',
+    selector: '[tsmpSticky]',
 })
 export class TsMonkeyPatchStickyDirective implements AfterViewInit, OnDestroy {
 
@@ -104,7 +104,7 @@ export class TsMonkeyPatchStickyDirective implements AfterViewInit, OnDestroy {
 
     /**
      * create a placeholder which will shown if element is sticky
-     * 
+     *
      */
     private createPlaceholder() {
         this.placeHolder = this.renderer.createElement('div');

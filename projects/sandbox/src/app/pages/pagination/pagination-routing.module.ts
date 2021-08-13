@@ -4,7 +4,7 @@ import { PaginationPage } from './ui/pagination';
 
 @NgModule({
     declarations: [],
-    imports: [ 
+    imports: [
         RouterModule.forChild([
             {
                 path: "",

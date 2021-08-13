@@ -1,14 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TsMonkeyPatchCommonModule } from '@tsmonkeypatch/core/common';
-import { TsMonkeyPatchDatalist } from './ui/datalist';
+import { TsMonkeyPatchDatalistComponent } from './ui/datalist';
 
 @NgModule({
-    declarations: [ TsMonkeyPatchDatalist ],
+    declarations: [
+        TsMonkeyPatchDatalistComponent
+    ],
     imports: [
         CommonModule,
         TsMonkeyPatchCommonModule
     ],
-    exports: [ TsMonkeyPatchDatalist ]
+    exports: [
+        TsMonkeyPatchDatalistComponent
+    ]
 })
 export class TsMonkeyPatchDatalistModule {}

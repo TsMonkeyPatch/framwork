@@ -1,60 +1,60 @@
 import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 
 export interface OverlayControl {
-    closeOverlay(): void;
+  closeOverlay(): void;
 
-    openOverlay(): void;
+  openOverlay(): void;
 
-    toggleOverlay(): void;
+  toggleOverlay(): void;
 }
 
 @Component({
-    encapsulation: ViewEncapsulation.None,
-    selector: 'tsmp-overlay',
-    styles: [`
-        .tsmp-overlay {
-            position: absolute;
-            z-index: 5000;
-        }
-    `],
-    template: `
-        <ng-template #wrapper>
-            <ng-content></ng-content>
-        </ng-template>
-    `
+  encapsulation: ViewEncapsulation.None,
+  selector: 'tsmp-overlay',
+  styles: [`
+    .tsmp-overlay {
+        position: absolute;
+        z-index: 5000;
+    }
+  `],
+  template: `
+    <ng-template #wrapper>
+        <ng-content></ng-content>
+    </ng-template>
+  `
 })
-export class TsMonkeyPatchOverlay {
+export class TsMonkeyPatchOverlayComponent {
 
-    @ViewChild('wrapper', {read: TemplateRef, static: true})
-    public template: TemplateRef<void>;
+  @ViewChild('wrapper', { read: TemplateRef, static: true })
+  public template: TemplateRef<void>;
 
-    /**
-     * the overlay control
-     *
-     */
-    control: OverlayControl
+  /**
+   * the overlay control
+   *
+   */
+  control: OverlayControl
 
-    /**
-     * close the overlay
-     *
-     */
-    closeOverlay() {
-        this.control.closeOverlay()
-    }
+  /**
+   * close the overlay
+   *
+   */
+  closeOverlay() {
+    this.control.closeOverlay()
+  }
 
-    /**
-     *
-     *
-     */
-    openOverlay() {
-        this.control.openOverlay()
-    }
+  /**
+   *
+   *
+   */
+  openOverlay() {
+    this.control.openOverlay()
+  }
 
-    /**
-     * toggle overlay
-     *
-     */
-    toggleOverlay() {
-        this.control.toggleOverlay()
-    }
+  /**
+   * toggle overlay
+   *
+   */
+  toggleOverlay() {
+    this.control.toggleOverlay()
+  }
 }

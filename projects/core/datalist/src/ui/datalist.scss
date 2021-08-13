@@ -1,6 +1,11 @@
 
 :host {
 
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+
     li[tsmpNavigableListItem] {
 
         box-sizing: border-box;

@@ -4,7 +4,7 @@ import { PositionFactory } from '@tsmonkeypatch/core/overlay';
 import { PaginationController } from '@tsmonkeypatch/core/pagination';
 
 @Component({
-    selector: 'pagnation',
+    selector: 'sandbox-pagnation',
     templateUrl: './pagination.html'
 })
 export class PaginationPage implements OnInit {
